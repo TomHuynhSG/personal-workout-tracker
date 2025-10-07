@@ -115,6 +115,117 @@ INSERT INTO exercises (name, muscle_group) VALUES
 ('Dumbbell Romanian Deadlifts', 'Legs');
 ```
 
+## 🧪 Adding Sample Data (Optional)
+
+To test the application's features with some realistic data, you can run the following SQL script in your Supabase SQL Editor. This will populate the database with three workout sessions showing progressive overload.
+
+```sql
+-- Clear any existing workout data before inserting new samples
+DELETE FROM sets;
+DELETE FROM workout_sessions;
+
+-- === SESSION 1 (A Week Ago) ===
+INSERT INTO workout_sessions (date) VALUES (CURRENT_DATE - INTERVAL '7 day');
+-- Sets for Session 1
+INSERT INTO sets (workout_session_id, exercise_id, set_number, weight, reps) VALUES
+-- Incline Dumbbell Press (ID: 1)
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 1, 1, 20, 12),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 1, 2, 20, 10),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 1, 3, 22.5, 8),
+-- Flat Dumbbell Press (ID: 2)
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 2, 1, 25, 10),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 2, 2, 25, 9),
+-- Dumbbell Chest-Supported Row (ID: 3)
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 3, 1, 30, 12),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 3, 2, 30, 11),
+-- Single Arm Dumbbell Row (ID: 4)
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 4, 1, 15, 12),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 4, 2, 15, 12),
+-- Seated Dumbbell Press (ID: 5)
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 5, 1, 15, 10),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 5, 2, 15, 9),
+-- Dumbbell Lateral Raise (ID: 6)
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 6, 1, 8, 15),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 6, 2, 8, 14),
+-- Seated Incline Dumbbell Curls (ID: 8)
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 8, 1, 10, 12),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 8, 2, 10, 11),
+-- Standing Overhead Dumbbell Extension (ID: 10)
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 10, 1, 12.5, 12),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 10, 2, 12.5, 10),
+-- Dumbbell Romanian Deadlifts (ID: 11)
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 11, 1, 25, 12),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 11, 2, 25, 12);
+
+
+-- === SESSION 2 (4 Days Ago) ===
+INSERT INTO workout_sessions (date) VALUES (CURRENT_DATE - INTERVAL '4 day');
+-- Sets for Session 2
+INSERT INTO sets (workout_session_id, exercise_id, set_number, weight, reps) VALUES
+-- Incline Dumbbell Press (ID: 1)
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 1, 1, 22.5, 10),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 1, 2, 22.5, 9),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 1, 3, 22.5, 8),
+-- Flat Dumbbell Press (ID: 2)
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 2, 1, 27.5, 8),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 2, 2, 27.5, 7),
+-- Dumbbell Chest-Supported Row (ID: 3)
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 3, 1, 32.5, 10),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 3, 2, 32.5, 10),
+-- Single Arm Dumbbell Row (ID: 4)
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 4, 1, 17.5, 10),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 4, 2, 17.5, 10),
+-- Seated Dumbbell Press (ID: 5)
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 5, 1, 17.5, 8),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 5, 2, 17.5, 8),
+-- Dumbbell Lateral Raise (ID: 6)
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 6, 1, 10, 12),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 6, 2, 10, 11),
+-- Preacher Dumbbell Curls (ID: 9)
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 9, 1, 10, 10),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 9, 2, 10, 9),
+-- Standing Overhead Dumbbell Extension (ID: 10)
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 10, 1, 15, 10),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 10, 2, 15, 9),
+-- Dumbbell Romanian Deadlifts (ID: 11)
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 11, 1, 27.5, 10),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 11, 2, 27.5, 10);
+
+
+-- === SESSION 3 (Yesterday) ===
+INSERT INTO workout_sessions (date) VALUES (CURRENT_DATE - INTERVAL '1 day');
+-- Sets for Session 3
+INSERT INTO sets (workout_session_id, exercise_id, set_number, weight, reps) VALUES
+-- Incline Dumbbell Press (ID: 1)
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 1, 1, 22.5, 12),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 1, 2, 22.5, 11),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 1, 3, 25, 8),
+-- Flat Dumbbell Press (ID: 2)
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 2, 1, 27.5, 10),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 2, 2, 30, 7),
+-- Dumbbell Chest-Supported Row (ID: 3)
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 3, 1, 32.5, 12),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 3, 2, 32.5, 11),
+-- Single Arm Dumbbell Row (ID: 4)
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 4, 1, 17.5, 12),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 4, 2, 17.5, 11),
+-- Seated Dumbbell Press (ID: 5)
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 5, 1, 17.5, 10),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 5, 2, 17.5, 9),
+-- Wall Leaning Dumbbell Lateral Raise (ID: 7)
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 7, 1, 8, 12),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 7, 2, 8, 12),
+-- Seated Incline Dumbbell Curls (ID: 8)
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 8, 1, 12.5, 10),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 8, 2, 12.5, 9),
+-- Standing Overhead Dumbbell Extension (ID: 10)
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 10, 1, 15, 12),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 10, 2, 15, 11),
+-- Dumbbell Romanian Deadlifts (ID: 11)
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 11, 1, 30, 10),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 11, 2, 30, 10);
+```
+
 ## ✍️ Author
 
 - **Huynh Nguyen Minh Thong (Tom Huynh)**

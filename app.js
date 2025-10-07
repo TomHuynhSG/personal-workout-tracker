@@ -151,12 +151,12 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
             row.innerHTML = `
-                <td>${exercise.name}</td>
-                <td class="sets-container">${setsHtml}</td>
-                <td class="volume"><span class="badge bg-primary volume-badge">0</span></td>
-                <td class="previous-volume">${previousVolume > 0 ? `<span class="badge bg-danger volume-badge">${previousVolume.toFixed(1)}</span> - ${previousDate}` : 'N/A'}</td>
-                <td class="change">N/A</td>
-                <td>
+                <td data-label="Exercise">${exercise.name}</td>
+                <td data-label="Sets (Weight x Reps)" class="sets-container">${setsHtml}</td>
+                <td data-label="Volume (kg)" class="volume"><span class="badge bg-primary volume-badge">0</span></td>
+                <td data-label="Previous Volume" class="previous-volume">${previousVolume > 0 ? `<span class="badge bg-danger volume-badge">${previousVolume.toFixed(1)}</span> - ${previousDate}` : 'N/A'}</td>
+                <td data-label="Change vs. Last" class="change">N/A</td>
+                <td data-label="Actions">
                     <button type="button" class="btn btn-sm btn-info add-set-btn">Add Set</button>
                     <button type="button" class="btn btn-sm btn-danger delete-set-btn mt-1">Delete Set</button>
                     <button type="button" class="btn btn-sm btn-warning delete-exercise-btn mt-1">Delete Exercise</button>
