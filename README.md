@@ -24,7 +24,23 @@ A modern, feature-rich, single-page web application designed to help you track y
 - **Customization & Usability:**
     - **Dark Mode:** A sleek dark theme that can be toggled on/off and is saved to your browser's preferences.
     - **Touch-Friendly Interface:** All buttons, inputs, and interactive elements are sized for easy use on mobile and tablet devices.
-    - **Add New Exercises:** Easily expand your exercise library on the fly.
+- **Add New Exercises:** Easily expand your exercise library on the fly.
+
+## 📸 Screenshots
+
+Here's a look at the application in action.
+
+*Main Dashboard (Light Mode)*
+![Dashboard Light Mode](screenshots/homepage-light.png)
+
+*Main Dashboard (Dark Mode)*
+![Dashboard Dark Mode](screenshots/homepage-dark.png)
+
+*Workout Session (Light Mode)*
+![Workout Session Light Mode](screenshots/workout-light.png)
+
+*Workout Session (Dark Mode)*
+![Workout Session Dark Mode](screenshots/workout-dark.png)
 
 ## 🛠️ Tech Stack
 
