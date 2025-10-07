@@ -1,0 +1,125 @@
+body {
+    background-color: #f8f9fa;
+}
+
+.container {
+    max-width: 1200px;
+    padding-bottom: 50px;
+}
+
+#workout-session th, #workout-session td {
+    vertical-align: middle;
+}
+
+.set-input {
+    width: 90px;
+    padding: 0.5rem;
+    font-size: 1rem;
+    margin-right: 5px;
+}
+
+#overallVolumeChart, #exerciseProgressChart {
+    max-height: 250px;
+}
+
+/* --- Touch-Friendly Styles --- */
+
+/* General Buttons & Inputs */
+.btn, .form-select {
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+}
+
+/* Make FullCalendar larger and more touch-friendly */
+#calendar-container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.fc .fc-toolbar-title {
+    font-size: 1.5rem;
+}
+
+.fc .fc-daygrid-day-number, .fc .fc-col-header-cell-cushion {
+    font-size: 1rem;
+    padding: 5px;
+}
+
+.fc .fc-event {
+    font-size: 0.85rem;
+    padding: 2px 4px;
+}
+
+.sets-container {
+    white-space: nowrap;
+}
+
+.volume-badge {
+    font-size: 0.9rem;
+    font-weight: bold;
+}
+
+#pr-list {
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+#new-workout-btn {
+    height: 100px; /* Make button taller */
+    font-size: 1.5rem; /* Make text bigger */
+}
+
+/* --- Dark Mode --- */
+body.dark-mode {
+    background-color: #121212;
+    color: #e0e0e0;
+}
+
+.dark-mode .card {
+    background-color: #1e1e1e;
+    border-color: #444;
+}
+
+.dark-mode .card-header {
+    background-color: #333;
+    border-bottom-color: #444;
+    color: #fff;
+}
+
+.dark-mode .list-group-item {
+    background-color: #1e1e1e;
+    border-color: #444;
+    color: #e0e0e0;
+}
+
+.dark-mode .table {
+    color: #e0e0e0;
+}
+
+.dark-mode .table-bordered {
+    border-color: #444;
+}
+
+.dark-mode h1, .dark-mode h2 {
+    color: #fff;
+}
+
+.dark-mode .table-bordered th,
+.dark-mode .table-bordered td {
+    border-color: #444;
+}
+
+.dark-mode .table > :not(caption) > * > * {
+    background-color: #1e1e1e !important; /* Force override */
+    color: #e0e0e0;
+}
+
+.dark-mode .form-control {
+    background-color: #333;
+    color: #e0e0e0;
+    border-color: #555;
+}
+
+.dark-mode .form-control::placeholder {
+    color: #888;
+}
