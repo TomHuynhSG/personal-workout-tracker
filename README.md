@@ -113,6 +113,7 @@ INSERT INTO exercises (name, muscle_group) VALUES
 ('Preacher Dumbbell Curls', 'Arms'),
 ('Standing Overhead Dumbbell Extension', 'Arms'),
 ('Dumbbell Romanian Deadlifts', 'Legs');
+```
 
 ## ✍️ Author
 
