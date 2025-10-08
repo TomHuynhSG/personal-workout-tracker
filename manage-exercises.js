@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // Populate Routine Management lists
             const listItemRoutine = document.createElement('li');
             listItemRoutine.className = 'list-group-item';
-            listItemRoutine.textContent = ex.name;
+            listItemRoutine.innerHTML = `${ex.name} <span class="badge bg-secondary">${ex.muscle_group}</span>`;
             listItemRoutine.dataset.id = ex.id;
             if (ex.is_in_routine) {
                 routineList.appendChild(listItemRoutine);

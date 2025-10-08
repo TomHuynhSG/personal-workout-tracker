@@ -150,7 +150,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
             row.innerHTML = `
-                <td data-label="Exercise">${exercise.name}</td>
+                <td data-label="Exercise">${exercise.name} <span class="badge bg-secondary">${exercise.muscle_group}</span></td>
                 <td data-label="Sets (Weight x Reps)" class="sets-container">${setsHtml}</td>
                 <td data-label="Volume (kg)" class="volume"><span class="badge bg-primary volume-badge">0</span></td>
                 <td data-label="Previous Volume" class="previous-volume">${previousVolume > 0 ? `<span class="badge bg-danger volume-badge">${previousVolume.toFixed(1)}</span> - ${previousDate}` : 'N/A'}</td>
@@ -174,6 +174,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             .order('ordering');
         if (error) {
             console.error('Error fetching exercises:', error);
+            return [];
+        }
+        return data;
+    }
+
+    async function getAllExercises() {
+        const { data, error } = await supabaseClient
+            .from('exercises')
+            .select('*')
+            .order('name');
+        if (error) {
+            console.error('Error fetching all exercises:', error);
             return [];
         }
         return data;
@@ -500,7 +512,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         row.innerHTML = `
-            <td data-label="Exercise">${exercise.name}</td>
+            <td data-label="Exercise">${exercise.name} <span class="badge bg-secondary">${exercise.muscle_group}</span></td>
             <td data-label="Sets (Weight x Reps)" class="sets-container">${setsHtml}</td>
             <td data-label="Volume (kg)" class="volume"><span class="badge bg-primary volume-badge">0</span></td>
             <td data-label="Previous Volume" class="previous-volume">${previousVolume > 0 ? `<span class="badge bg-danger volume-badge">${previousVolume.toFixed(1)}</span> - ${previousDate}` : 'N/A'}</td>
@@ -703,7 +715,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const prList = document.getElementById('pr-list');
         prList.innerHTML = ''; // Clear existing PRs
 
-        const exercises = await getExercises();
+        const exercises = await getAllExercises();
         if (!exercises) return;
 
         let allPrs = [];
@@ -721,6 +733,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (bestSet) {
                 allPrs.push({
                     exerciseName: exercise.name,
+                    muscleGroup: exercise.muscle_group,
                     weight: bestSet.weight,
                     reps: bestSet.reps
                 });
@@ -736,7 +749,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const item = document.createElement('li');
             item.className = 'list-group-item d-flex justify-content-between align-items-center';
             item.innerHTML = `
-                <span>${pr.exerciseName}</span>
+                <span>${pr.exerciseName} <span class="badge bg-secondary">${pr.muscleGroup}</span></span>
                 <span class="badge bg-success rounded-pill">${pr.weight} kg x ${pr.reps} reps</span>
             `;
             prList.appendChild(item);
