@@ -258,7 +258,13 @@ INSERT INTO sets (workout_session_id, exercise_id, set_number, weight, reps) VAL
 ( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 1, 1, 17.5, 12),
 ( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 1, 2, 17.5, 11),
 ( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 2, 1, 22.5, 10),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 2, 2, 22.5, 10);
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 2, 2, 22.5, 10),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 3, 1, 25, 12),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 3, 2, 25, 12),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 5, 1, 12.5, 10),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 5, 2, 12.5, 10),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 8, 1, 10, 10),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 8, 2, 10, 8);
 
 -- === SESSION 5 (14 days ago) ===
 INSERT INTO workout_sessions (date) VALUES (CURRENT_DATE - INTERVAL '14 day');
@@ -266,7 +272,13 @@ INSERT INTO sets (workout_session_id, exercise_id, set_number, weight, reps) VAL
 ( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 3, 1, 27.5, 12),
 ( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 3, 2, 27.5, 12),
 ( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 4, 1, 12.5, 12),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 4, 2, 12.5, 12);
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 4, 2, 12.5, 12),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 7, 1, 5, 15),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 7, 2, 5, 15),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 9, 1, 8, 12),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 9, 2, 8, 10),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 10, 1, 10, 12),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 10, 2, 10, 12);
 
 -- === SESSION 6 (17 days ago) ===
 INSERT INTO workout_sessions (date) VALUES (CURRENT_DATE - INTERVAL '17 day');
@@ -274,7 +286,11 @@ INSERT INTO sets (workout_session_id, exercise_id, set_number, weight, reps) VAL
 ( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 5, 1, 12.5, 12),
 ( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 5, 2, 12.5, 11),
 ( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 6, 1, 7.5, 15),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 6, 2, 7.5, 15);
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 6, 2, 7.5, 15),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 8, 1, 7.5, 12),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 8, 2, 7.5, 12),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 11, 1, 20, 12),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 11, 2, 20, 12);
 ```
 
 ## ✍️ Author
