@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Exercises - Personal Workout Tracker</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="style.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="index.html">🏋️ Personal Workout Tracker</a>
+            <div class="ms-auto d-flex align-items-center">
+                <a href="backup.html" class="btn btn-outline-secondary me-2" title="Backup / Restore">💾</a>
+                <button class="btn btn-outline-light" id="theme-toggle-btn">🌙</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h1>Manage Exercises</h1>
+
+        <!-- Section 2: Current Routine -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h2>Customize Your Workout Routine</h2>
+            </div>
+            <div class="card-body">
+                <p>Add or remove exercises from the list that appears when you start a new workout.</p>
+                <div class="row">
+                    <div class="col-md-5">
+                        <h5>Exercises in Routine</h5>
+                        <ul id="routine-exercises-list" class="list-group">
+                            <!-- Exercises in the current routine will be loaded here -->
+                        </ul>
+                        <div class="mt-2">
+                            <button class="btn btn-sm btn-outline-secondary" id="move-up-btn">⬆️ Move Up</button>
+                            <button class="btn btn-sm btn-outline-secondary" id="move-down-btn">⬇️ Move Down</button>
+                        </div>
+                    </div>
+                    <div class="col-md-2 text-center align-self-center">
+                        <button class="btn btn-light mb-2" id="add-to-routine-btn">⬅️ Add</button>
+                        <button class="btn btn-light" id="remove-from-routine-btn">Remove ➡️</button>
+                    </div>
+                    <div class="col-md-5">
+                        <h5>Available Exercises</h5>
+                        <ul id="available-exercises-list" class="list-group">
+                            <!-- Exercises not in the routine will be loaded here -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 1: All Exercises CRUD -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h2>All Exercises (Master List)</h2>
+            </div>
+            <div class="card-body">
+                <p>Create, edit, or permanently delete exercises from the database.</p>
+                <ul id="all-exercises-list" class="list-group mb-3">
+                    <!-- All exercises will be loaded here -->
+                </ul>
+                <h5>Add New Exercise</h5>
+                <div class="row g-3">
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" id="new-exercise-name-master" placeholder="Exercise Name">
+                    </div>
+                    <div class="col-sm-4">
+                        <select class="form-select" id="new-exercise-group-master">
+                            <option selected disabled>Choose Muscle Group...</option>
+                            <option value="Chest">Chest</option>
+                            <option value="Back">Back</option>
+                            <option value="Shoulders">Shoulders</option>
+                            <option value="Legs">Legs</option>
+                            <option value="Arms">Arms</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-2 d-grid">
+                        <button class="btn btn-success" id="create-exercise-master-btn">Create</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabaseClient.js"></script>
+    <script src="manage-exercises.js"></script>
+</body>
+</html>

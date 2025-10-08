@@ -44,8 +44,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     homeLink.addEventListener('click', (e) => {
         e.preventDefault();
-        workoutSession.classList.add('d-none');
-        homepage.classList.remove('d-none');
+        window.location.href = 'index.html';
     });
 
     newWorkoutBtn.addEventListener('click', async () => {
@@ -120,7 +119,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (setsToLoad.length > 0) {
                     setsToLoad.forEach(s => {
                         setsHtml += `
-                            <div class="set mt-2">
+                            <div class="set mt-2 position-relative">
                                 <input type="number" class="form-control d-inline-block set-input weight-input" placeholder="${s.weight || 'kg'}" value="${s.weight || ''}">
                                 <input type="number" class="form-control d-inline-block set-input reps-input" placeholder="${s.reps || 'reps'}" value="${s.reps || ''}">
                             </div>
@@ -131,7 +130,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (setsForPlaceholders.length > 0) {
                     setsForPlaceholders.forEach(s => {
                         setsHtml += `
-                            <div class="set mt-2">
+                            <div class="set mt-2 position-relative">
                                 <input type="number" class="form-control d-inline-block set-input weight-input" placeholder="${s.weight || 'kg'}">
                                 <input type="number" class="form-control d-inline-block set-input reps-input" placeholder="${s.reps || 'reps'}">
                             </div>
@@ -143,7 +142,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             // If no sets were found for either case, default to one empty set
             if (setsHtml === '') {
                 setsHtml = `
-                    <div class="set position-relative">
+                    <div class="set mt-2 position-relative">
                         <input type="number" class="form-control d-inline-block set-input weight-input" placeholder="kg">
                         <input type="number" class="form-control d-inline-block set-input reps-input" placeholder="reps">
                     </div>
@@ -168,7 +167,11 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     async function getExercises() {
-        const { data, error } = await supabaseClient.from('exercises').select('*').order('id', { ascending: true });
+        const { data, error } = await supabaseClient
+            .from('exercises')
+            .select('*')
+            .eq('is_in_routine', true)
+            .order('ordering');
         if (error) {
             console.error('Error fetching exercises:', error);
             return [];
@@ -216,7 +219,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (e.target.classList.contains('add-set-btn')) {
             const setsContainer = e.target.closest('tr').querySelector('.sets-container');
             const newSet = document.createElement('div');
-            newSet.className = 'set mt-2';
+            newSet.className = 'set mt-2 position-relative';
             const lastWeightPlaceholder = setsContainer.querySelector('.weight-input:last-of-type')?.placeholder || 'kg';
             const lastRepsPlaceholder = setsContainer.querySelector('.reps-input:last-of-type')?.placeholder || 'reps';
             newSet.innerHTML = `
@@ -281,7 +284,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         prBadge.textContent = 'New PR!';
                         prBadge.style.position = 'absolute';
                         prBadge.style.top = '-10px';
-                        prBadge.style.right = '-10px';
+                        prBadge.style.right = '0px';
                         setElement.appendChild(prBadge);
                     }
                 } else {
@@ -308,8 +311,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
-    workoutForm.addEventListener('submit', async (e) => {
+    const saveConfirmationModal = new bootstrap.Modal(document.getElementById('saveConfirmationModal'));
+    const confirmSaveBtn = document.getElementById('confirm-save-btn');
+    const addExerciseModal = new bootstrap.Modal(document.getElementById('addExerciseModal'));
+    const existingExerciseSelect = document.getElementById('existing-exercise-select');
+    const addSelectedExerciseBtn = document.getElementById('add-selected-exercise-btn');
+    const createNewExerciseBtn = document.getElementById('create-new-exercise-btn');
+
+    workoutForm.addEventListener('submit', (e) => {
         e.preventDefault();
+        saveConfirmationModal.show();
+    });
+
+    confirmSaveBtn.addEventListener('click', async () => {
+        saveConfirmationModal.hide();
         let sessionId = workoutForm.dataset.sessionId;
 
         // If it's a new session, create it first
@@ -369,47 +384,136 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         alert('Workout session saved successfully!');
-        workoutSession.classList.add('d-none');
-        homepage.classList.remove('d-none');
-        loadPastSessions();
-        loadDashboardCharts(); // Refresh charts
+        window.location.reload();
     });
+
+    async function populateAddExerciseModal() {
+        const exercises = await getExercises();
+        const currentlyDisplayed = Array.from(workoutTableBody.querySelectorAll('tr')).map(tr => tr.dataset.exerciseName);
+        
+        existingExerciseSelect.innerHTML = '<option selected disabled>Select an exercise...</option>'; // Reset
+        exercises.forEach(ex => {
+            if (!currentlyDisplayed.includes(ex.name)) {
+                const option = document.createElement('option');
+                option.value = ex.id;
+                option.textContent = ex.name;
+                existingExerciseSelect.appendChild(option);
+            }
+        });
+    }
 
     document.getElementById('add-exercise-btn').addEventListener('click', async () => {
-        const newExerciseName = prompt('Enter the name of the new exercise:');
-        if (newExerciseName && newExerciseName.trim() !== '') {
-            const { data, error } = await supabaseClient
-                .from('exercises')
-                .insert({ name: newExerciseName.trim() })
-                .select()
-                .single();
+        await populateAddExerciseModal();
+        addExerciseModal.show();
+    });
 
-            if (error) {
-                console.error('Error adding new exercise:', error);
-                alert('Failed to add exercise. It might already exist.');
-                return;
-            }
-
-            // Add the new exercise to the current session's table
-            const row = document.createElement('tr');
-            row.dataset.exerciseId = data.id;
-            row.dataset.exerciseName = data.name;
-            row.innerHTML = `
-                <td>${data.name}</td>
-                <td class="sets-container">
-                    <div class="set">
-                        <input type="number" class="form-control d-inline-block set-input weight-input" placeholder="kg">
-                        <input type="number" class="form-control d-inline-block set-input reps-input" placeholder="reps">
-                    </div>
-                </td>
-                <td class="volume">0</td>
-                <td class="change">N/A</td>
-                <td><button type="button" class="btn btn-sm btn-info add-set-btn">Add Set</button></td>
-            `;
-            workoutTableBody.appendChild(row);
-            alert(`Exercise "${data.name}" added successfully!`);
+    addSelectedExerciseBtn.addEventListener('click', async () => {
+        const selectedId = parseInt(existingExerciseSelect.value);
+        if (isNaN(selectedId)) {
+            alert('Please select an exercise.');
+            return;
+        }
+        const { data: exercise } = await supabaseClient.from('exercises').select('*').eq('id', selectedId).single();
+        if (exercise) {
+            await addExerciseRowToTable(exercise);
+            addExerciseModal.hide();
         }
     });
+
+    createNewExerciseBtn.addEventListener('click', async () => {
+        const newExerciseName = document.getElementById('new-exercise-name').value.trim();
+        const newExerciseGroup = document.getElementById('new-exercise-group').value;
+
+        if (!newExerciseName || !newExerciseGroup) {
+            alert('Please provide a name and muscle group for the new exercise.');
+            return;
+        }
+
+        const { data, error } = await supabaseClient
+            .from('exercises')
+            .insert({ name: newExerciseName, muscle_group: newExerciseGroup })
+            .select()
+            .single();
+
+        if (error) {
+            console.error('Error creating new exercise:', error);
+            alert('Failed to create exercise. It might already exist.');
+            return;
+        }
+
+        await addExerciseRowToTable(data);
+        addExerciseModal.hide();
+        document.getElementById('new-exercise-name').value = '';
+        document.getElementById('new-exercise-group').value = 'Select a muscle group...';
+    });
+
+    async function addExerciseRowToTable(exercise) {
+        const row = document.createElement('tr');
+        row.dataset.exerciseId = exercise.id;
+        row.dataset.exerciseName = exercise.name;
+
+        // --- Fetch Previous Volume Logic (mirrors populateWorkoutTable) ---
+        let previousVolume = 0;
+        let previousDate = 'N/A';
+        let setsInLastSession = [];
+        const { data: lastSessionWithExercise } = await supabaseClient
+            .from('workout_sessions')
+            .select('id, date, sets!inner(exercise_id)')
+            .eq('sets.exercise_id', exercise.id)
+            .order('date', { ascending: false })
+            .limit(1)
+            .single();
+
+        if (lastSessionWithExercise) {
+            previousDate = formatShortDate(lastSessionWithExercise.date);
+            const { data: fetchedSets } = await supabaseClient
+                .from('sets')
+                .select('weight, reps, volume')
+                .eq('workout_session_id', lastSessionWithExercise.id)
+                .eq('exercise_id', exercise.id);
+
+            if (fetchedSets) {
+                previousVolume = fetchedSets.reduce((sum, set) => sum + (set.volume || 0), 0);
+                setsInLastSession = fetchedSets;
+            }
+        }
+        row.dataset.lastVolume = previousVolume;
+        // --- End of Fetch Logic ---
+
+        let setsHtml = '';
+        if (setsInLastSession && setsInLastSession.length > 0) {
+            setsInLastSession.forEach(s => {
+                setsHtml += `
+                    <div class="set mt-2 position-relative">
+                        <input type="number" class="form-control d-inline-block set-input weight-input" placeholder="${s.weight || 'kg'}">
+                        <input type="number" class="form-control d-inline-block set-input reps-input" placeholder="${s.reps || 'reps'}">
+                    </div>
+                `;
+            });
+        } else {
+            setsHtml = `
+                <div class="set mt-2 position-relative">
+                    <input type="number" class="form-control d-inline-block set-input weight-input" placeholder="kg">
+                    <input type="number" class="form-control d-inline-block set-input reps-input" placeholder="reps">
+                </div>
+            `;
+        }
+
+        row.innerHTML = `
+            <td data-label="Exercise">${exercise.name}</td>
+            <td data-label="Sets (Weight x Reps)" class="sets-container">${setsHtml}</td>
+            <td data-label="Volume (kg)" class="volume"><span class="badge bg-primary volume-badge">0</span></td>
+            <td data-label="Previous Volume" class="previous-volume">${previousVolume > 0 ? `<span class="badge bg-danger volume-badge">${previousVolume.toFixed(1)}</span> - ${previousDate}` : 'N/A'}</td>
+            <td data-label="Change vs. Last" class="change">N/A</td>
+            <td data-label="Actions">
+                <button type="button" class="btn btn-sm btn-info add-set-btn">Add Set</button>
+                <button type="button" class="btn btn-sm btn-danger delete-set-btn mt-1">Delete Set</button>
+                <button type="button" class="btn btn-sm btn-warning delete-exercise-btn mt-1">Delete Exercise</button>
+            </td>
+        `;
+        workoutTableBody.appendChild(row);
+        calculateVolume(row); // Calculate initial volume and change
+    }
 
     let overallVolumeChart = null;
     let exerciseProgressChart = null;

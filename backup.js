@@ -46,7 +46,14 @@ document.addEventListener('DOMContentLoaded', () => {
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const day = String(now.getDate()).padStart(2, '0');
+            const hours = String(now.getHours()).padStart(2, '0');
+            const minutes = String(now.getMinutes()).padStart(2, '0');
+            const seconds = String(now.getSeconds()).padStart(2, '0');
+            const timestamp = `${year}-${month}-${day}_${hours}-${minutes}-${seconds}`;
             a.download = `workout-backup-${timestamp}.json`;
             document.body.appendChild(a);
             a.click();
@@ -99,7 +106,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // 2. Restore exercises and create an ID map { oldId: newId }
             const oldExerciseIdMap = {};
-            const sanitizedExercises = backupData.exercises.map(({ id, created_at, ...rest }) => rest);
+            const sanitizedExercises = backupData.exercises.map(({ id, created_at, ...rest }, index) => ({
+                ...rest,
+                is_in_routine: rest.is_in_routine !== undefined ? rest.is_in_routine : true,
+                ordering: rest.ordering !== undefined ? rest.ordering : index
+            }));
             const { data: newExercises, error: exercisesError } = await supabaseClient
                 .from('exercises')
                 .insert(sanitizedExercises)

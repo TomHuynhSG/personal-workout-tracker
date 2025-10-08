@@ -15,7 +15,7 @@ A modern, feature-rich, single-page web application designed to help you track y
     - **"New PR!" Alerts:** Get immediate feedback with a badge when you set a new personal record for weight or reps on any set.
 - **Comprehensive Dashboard:**
     - **Workout Calendar:** A beautiful, interactive calendar view of your entire workout history. Click any marked day to view or edit that session.
-    - **Motivational Stats:** At-a-glance badges for your current workout streak, workouts this week, and workouts this month.
+    - **Motivational Stats:** At-a-glance badges for your current workout streak, plus totals for workouts this week, this month, and this year.
     - **Personal Records:** A scrollable list of your best lift (heaviest weight for reps) for every exercise you've performed.
 - **Insightful Data Visualization:**
     - **Muscle Group Distribution:** A pie chart showing the percentage of your total volume dedicated to each muscle group (Chest, Back, etc.).
@@ -23,10 +23,11 @@ A modern, feature-rich, single-page web application designed to help you track y
     - **Exercise-Specific Progress:** A filterable line chart to track your volume progression for any individual exercise.
 - **Customization & Usability:**
     - **Dark Mode:** A sleek dark theme that can be toggled on/off and is saved to your browser's preferences.
-    - **Touch-Friendly Interface:** All buttons, inputs, and interactive elements are sized for easy use on mobile and tablet devices.
+    - **Touch-Friendly & Responsive:** The entire application, including the complex workout table, is fully responsive and transforms into a user-friendly card layout on mobile devices.
 - **Add New Exercises:** Easily expand your exercise library on the fly.
 - **Data Portability:** Backup your entire workout history to a JSON file and restore it at any time.
 - **PWA Ready:** Installable on your home screen for a full-screen, app-like experience on mobile devices.
+- **Full Exercise Management:** A dedicated page to perform CRUD operations on all exercises and customize the default workout routine.
 
 ## 📸 Screenshots
 
@@ -100,6 +101,8 @@ CREATE TABLE exercises (
     id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     name TEXT NOT NULL UNIQUE,
     muscle_group TEXT NOT NULL,
+    is_in_routine BOOLEAN DEFAULT TRUE NOT NULL,
+    ordering INT,
     created_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );
 
@@ -123,18 +126,18 @@ CREATE TABLE sets (
 );
 
 -- Insert initial exercises
-INSERT INTO exercises (name, muscle_group) VALUES
-('Incline Dumbbell Press', 'Chest'),
-('Flat Dumbbell Press', 'Chest'),
-('Dumbbell Chest-Supported Row', 'Back'),
-('Single Arm Dumbbell Row', 'Back'),
-('Seated Dumbbell Press', 'Shoulders'),
-('Dumbbell Lateral Raise', 'Shoulders'),
-('Wall Leaning Dumbbell Lateral Raise', 'Shoulders'),
-('Seated Incline Dumbbell Curls', 'Arms'),
-('Preacher Dumbbell Curls', 'Arms'),
-('Standing Overhead Dumbbell Extension', 'Arms'),
-('Dumbbell Romanian Deadlifts', 'Legs');
+INSERT INTO exercises (name, muscle_group, ordering) VALUES
+('Incline Dumbbell Press', 'Chest', 1),
+('Flat Dumbbell Press', 'Chest', 2),
+('Dumbbell Chest-Supported Row', 'Back', 3),
+('Single Arm Dumbbell Row', 'Back', 4),
+('Seated Dumbbell Press', 'Shoulders', 5),
+('Dumbbell Lateral Raise', 'Shoulders', 6),
+('Wall Leaning Dumbbell Lateral Raise', 'Shoulders', 7),
+('Seated Incline Dumbbell Curls', 'Arms', 8),
+('Preacher Dumbbell Curls', 'Arms', 9),
+('Standing Overhead Dumbbell Extension', 'Arms', 10),
+('Dumbbell Romanian Deadlifts', 'Legs', 11);
 ```
 
 ## 🧪 Adding Sample Data (Optional)
@@ -248,6 +251,30 @@ INSERT INTO sets (workout_session_id, exercise_id, set_number, weight, reps) VAL
 -- Dumbbell Romanian Deadlifts (ID: 11)
 ( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 11, 1, 30, 10),
 ( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 11, 2, 30, 10);
+
+-- === SESSION 4 (10 days ago) ===
+INSERT INTO workout_sessions (date) VALUES (CURRENT_DATE - INTERVAL '10 day');
+INSERT INTO sets (workout_session_id, exercise_id, set_number, weight, reps) VALUES
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 1, 1, 17.5, 12),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 1, 2, 17.5, 11),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 2, 1, 22.5, 10),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 2, 2, 22.5, 10);
+
+-- === SESSION 5 (14 days ago) ===
+INSERT INTO workout_sessions (date) VALUES (CURRENT_DATE - INTERVAL '14 day');
+INSERT INTO sets (workout_session_id, exercise_id, set_number, weight, reps) VALUES
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 3, 1, 27.5, 12),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 3, 2, 27.5, 12),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 4, 1, 12.5, 12),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 4, 2, 12.5, 12);
+
+-- === SESSION 6 (17 days ago) ===
+INSERT INTO workout_sessions (date) VALUES (CURRENT_DATE - INTERVAL '17 day');
+INSERT INTO sets (workout_session_id, exercise_id, set_number, weight, reps) VALUES
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 5, 1, 12.5, 12),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 5, 2, 12.5, 11),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 6, 1, 7.5, 15),
+( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 6, 2, 7.5, 15);
 ```
 
 ## ✍️ Author
