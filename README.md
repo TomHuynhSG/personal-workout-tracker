@@ -337,3 +337,9 @@ FROM (VALUES
 ## ✍️ Author
 
 - **Huynh Nguyen Minh Thong (Tom Huynh)**
+
+## 🏋️‍♂️ A Note from the Developer
+
+This project was born from a personal need to track workouts in a minimalistic home gym setup, centered around adjustable dumbbells and a bench. That's why the initial exercises and sample data are all dumbbell-focused. The goal was to create a tool perfectly tailored to this efficient and effective style of training.
+
+![My Home Gym](screenshots/home-gym.jpg)
