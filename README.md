@@ -91,12 +91,19 @@ To get this project running on your local machine, follow these steps:
 Run this script in your Supabase SQL Editor to initialize the database.
 
 ```sql
--- Drop existing tables in reverse order of dependency to avoid errors
+-- Clear any existing workout data before inserting new samples
+-- ===========================================================
+-- 🧱 DATABASE INITIALIZATION
+-- ===========================================================
+
+-- Drop existing tables in reverse order of dependency
 DROP TABLE IF EXISTS sets;
 DROP TABLE IF EXISTS workout_sessions;
 DROP TABLE IF EXISTS exercises;
 
+-- -----------------------------------------------------------
 -- Create the exercises table
+-- -----------------------------------------------------------
 CREATE TABLE exercises (
     id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     name TEXT NOT NULL UNIQUE,
@@ -106,14 +113,18 @@ CREATE TABLE exercises (
     created_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );
 
+-- -----------------------------------------------------------
 -- Create the workout_sessions table
+-- -----------------------------------------------------------
 CREATE TABLE workout_sessions (
     id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     date DATE NOT NULL,
     created_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );
 
+-- -----------------------------------------------------------
 -- Create the sets table
+-- -----------------------------------------------------------
 CREATE TABLE sets (
     id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     workout_session_id BIGINT REFERENCES workout_sessions(id) ON DELETE CASCADE,
@@ -125,7 +136,9 @@ CREATE TABLE sets (
     created_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );
 
+-- -----------------------------------------------------------
 -- Insert initial exercises
+-- -----------------------------------------------------------
 INSERT INTO exercises (name, muscle_group, ordering) VALUES
 ('Incline Dumbbell Press', 'Chest', 1),
 ('Flat Dumbbell Press', 'Chest', 2),
@@ -138,6 +151,7 @@ INSERT INTO exercises (name, muscle_group, ordering) VALUES
 ('Preacher Dumbbell Curls', 'Arms', 9),
 ('Standing Overhead Dumbbell Extension', 'Arms', 10),
 ('Dumbbell Romanian Deadlifts', 'Legs', 11);
+
 ```
 
 ## 🧪 Adding Sample Data (Optional)
@@ -147,150 +161,131 @@ To test the application's features with some realistic data, you can use the **R
 Alternatively, you can run the following SQL script in your Supabase SQL Editor. This will populate the database with three workout sessions showing progressive overload.
 
 ```sql
--- Clear any existing workout data before inserting new samples
+-- ===========================================================
+-- 🧪 SAMPLE DATA (Progressive Overload Demo)
+-- ===========================================================
+
 DELETE FROM sets;
 DELETE FROM workout_sessions;
 
--- === SESSION 1 (A Week Ago) ===
-INSERT INTO workout_sessions (date) VALUES (CURRENT_DATE - INTERVAL '7 day');
--- Sets for Session 1
-INSERT INTO sets (workout_session_id, exercise_id, set_number, weight, reps) VALUES
--- Incline Dumbbell Press (ID: 1)
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 1, 1, 20, 12),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 1, 2, 20, 10),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 1, 3, 22.5, 8),
--- Flat Dumbbell Press (ID: 2)
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 2, 1, 25, 10),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 2, 2, 25, 9),
--- Dumbbell Chest-Supported Row (ID: 3)
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 3, 1, 30, 12),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 3, 2, 30, 11),
--- Single Arm Dumbbell Row (ID: 4)
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 4, 1, 15, 12),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 4, 2, 15, 12),
--- Seated Dumbbell Press (ID: 5)
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 5, 1, 15, 10),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 5, 2, 15, 9),
--- Dumbbell Lateral Raise (ID: 6)
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 6, 1, 8, 15),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 6, 2, 8, 14),
--- Seated Incline Dumbbell Curls (ID: 8)
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 8, 1, 10, 12),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 8, 2, 10, 11),
--- Standing Overhead Dumbbell Extension (ID: 10)
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 10, 1, 12.5, 12),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 10, 2, 12.5, 10),
--- Dumbbell Romanian Deadlifts (ID: 11)
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 11, 1, 25, 12),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 11, 2, 25, 12);
+-- -----------------------------------------------------------
+-- SESSION 1 (A Week Ago)
+-- -----------------------------------------------------------
+WITH s AS (
+  INSERT INTO workout_sessions (date)
+  VALUES (CURRENT_DATE - INTERVAL '7 day')
+  RETURNING id
+)
+INSERT INTO sets (workout_session_id, exercise_id, set_number, weight, reps)
+SELECT s.id, e.exercise_id, e.set_number, e.weight, e.reps
+FROM (VALUES
+(1, 1, 1, 20, 12), (1, 1, 2, 20, 10), (1, 1, 3, 22.5, 8),
+(1, 2, 1, 25, 10), (1, 2, 2, 25, 9),
+(1, 3, 1, 30, 12), (1, 3, 2, 30, 11),
+(1, 4, 1, 15, 12), (1, 4, 2, 15, 12),
+(1, 5, 1, 15, 10), (1, 5, 2, 15, 9),
+(1, 6, 1, 8, 15),  (1, 6, 2, 8, 14),
+(1, 8, 1, 10, 12), (1, 8, 2, 10, 11),
+(1,10, 1, 12.5, 12), (1,10, 2, 12.5, 10),
+(1,11, 1, 25, 12),  (1,11, 2, 25, 12)
+) AS e(workout_id, exercise_id, set_number, weight, reps), s;
 
+-- -----------------------------------------------------------
+-- SESSION 2 (4 Days Ago)
+-- -----------------------------------------------------------
+WITH s AS (
+  INSERT INTO workout_sessions (date)
+  VALUES (CURRENT_DATE - INTERVAL '4 day')
+  RETURNING id
+)
+INSERT INTO sets (workout_session_id, exercise_id, set_number, weight, reps)
+SELECT s.id, e.exercise_id, e.set_number, e.weight, e.reps
+FROM (VALUES
+(2, 1, 1, 22.5, 10), (2, 1, 2, 22.5, 9), (2, 1, 3, 22.5, 8),
+(2, 2, 1, 27.5, 8), (2, 2, 2, 27.5, 7),
+(2, 3, 1, 32.5, 10), (2, 3, 2, 32.5, 10),
+(2, 4, 1, 17.5, 10), (2, 4, 2, 17.5, 10),
+(2, 5, 1, 17.5, 8), (2, 5, 2, 17.5, 8),
+(2, 6, 1, 10, 12), (2, 6, 2, 10, 11),
+(2, 9, 1, 10, 10), (2, 9, 2, 10, 9),
+(2,10, 1, 15, 10), (2,10, 2, 15, 9),
+(2,11, 1, 27.5, 10), (2,11, 2, 27.5, 10)
+) AS e(workout_id, exercise_id, set_number, weight, reps), s;
 
--- === SESSION 2 (4 Days Ago) ===
-INSERT INTO workout_sessions (date) VALUES (CURRENT_DATE - INTERVAL '4 day');
--- Sets for Session 2
-INSERT INTO sets (workout_session_id, exercise_id, set_number, weight, reps) VALUES
--- Incline Dumbbell Press (ID: 1)
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 1, 1, 22.5, 10),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 1, 2, 22.5, 9),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 1, 3, 22.5, 8),
--- Flat Dumbbell Press (ID: 2)
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 2, 1, 27.5, 8),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 2, 2, 27.5, 7),
--- Dumbbell Chest-Supported Row (ID: 3)
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 3, 1, 32.5, 10),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 3, 2, 32.5, 10),
--- Single Arm Dumbbell Row (ID: 4)
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 4, 1, 17.5, 10),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 4, 2, 17.5, 10),
--- Seated Dumbbell Press (ID: 5)
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 5, 1, 17.5, 8),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 5, 2, 17.5, 8),
--- Dumbbell Lateral Raise (ID: 6)
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 6, 1, 10, 12),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 6, 2, 10, 11),
--- Preacher Dumbbell Curls (ID: 9)
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 9, 1, 10, 10),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 9, 2, 10, 9),
--- Standing Overhead Dumbbell Extension (ID: 10)
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 10, 1, 15, 10),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 10, 2, 15, 9),
--- Dumbbell Romanian Deadlifts (ID: 11)
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 11, 1, 27.5, 10),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 11, 2, 27.5, 10);
+-- -----------------------------------------------------------
+-- SESSION 3 (Yesterday)
+-- -----------------------------------------------------------
+WITH s AS (
+  INSERT INTO workout_sessions (date)
+  VALUES (CURRENT_DATE - INTERVAL '1 day')
+  RETURNING id
+)
+INSERT INTO sets (workout_session_id, exercise_id, set_number, weight, reps)
+SELECT s.id, e.exercise_id, e.set_number, e.weight, e.reps
+FROM (VALUES
+(3, 1, 1, 22.5, 12), (3, 1, 2, 22.5, 11), (3, 1, 3, 25, 8),
+(3, 2, 1, 27.5, 10), (3, 2, 2, 30, 7),
+(3, 3, 1, 32.5, 12), (3, 3, 2, 32.5, 11),
+(3, 4, 1, 17.5, 12), (3, 4, 2, 17.5, 11),
+(3, 5, 1, 17.5, 10), (3, 5, 2, 17.5, 9),
+(3, 7, 1, 8, 12), (3, 7, 2, 8, 12),
+(3, 8, 1, 12.5, 10), (3, 8, 2, 12.5, 9),
+(3,10, 1, 15, 12), (3,10, 2, 15, 11),
+(3,11, 1, 30, 10), (3,11, 2, 30, 10)
+) AS e(workout_id, exercise_id, set_number, weight, reps), s;
 
+-- -----------------------------------------------------------
+-- SESSION 4 (10 Days Ago)
+-- -----------------------------------------------------------
+WITH s AS (
+  INSERT INTO workout_sessions (date)
+  VALUES (CURRENT_DATE - INTERVAL '10 day')
+  RETURNING id
+)
+INSERT INTO sets (workout_session_id, exercise_id, set_number, weight, reps)
+SELECT s.id, e.exercise_id, e.set_number, e.weight, e.reps
+FROM (VALUES
+(4, 1, 1, 17.5, 12), (4, 1, 2, 17.5, 11),
+(4, 2, 1, 22.5, 10), (4, 2, 2, 22.5, 10),
+(4, 3, 1, 25, 12), (4, 3, 2, 25, 12),
+(4, 5, 1, 12.5, 10), (4, 5, 2, 12.5, 10),
+(4, 8, 1, 10, 10), (4, 8, 2, 10, 8)
+) AS e(workout_id, exercise_id, set_number, weight, reps), s;
 
--- === SESSION 3 (Yesterday) ===
-INSERT INTO workout_sessions (date) VALUES (CURRENT_DATE - INTERVAL '1 day');
--- Sets for Session 3
-INSERT INTO sets (workout_session_id, exercise_id, set_number, weight, reps) VALUES
--- Incline Dumbbell Press (ID: 1)
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 1, 1, 22.5, 12),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 1, 2, 22.5, 11),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 1, 3, 25, 8),
--- Flat Dumbbell Press (ID: 2)
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 2, 1, 27.5, 10),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 2, 2, 30, 7),
--- Dumbbell Chest-Supported Row (ID: 3)
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 3, 1, 32.5, 12),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 3, 2, 32.5, 11),
--- Single Arm Dumbbell Row (ID: 4)
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 4, 1, 17.5, 12),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 4, 2, 17.5, 11),
--- Seated Dumbbell Press (ID: 5)
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 5, 1, 17.5, 10),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 5, 2, 17.5, 9),
--- Wall Leaning Dumbbell Lateral Raise (ID: 7)
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 7, 1, 8, 12),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 7, 2, 8, 12),
--- Seated Incline Dumbbell Curls (ID: 8)
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 8, 1, 12.5, 10),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 8, 2, 12.5, 9),
--- Standing Overhead Dumbbell Extension (ID: 10)
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 10, 1, 15, 12),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 10, 2, 15, 11),
--- Dumbbell Romanian Deadlifts (ID: 11)
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 11, 1, 30, 10),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 11, 2, 30, 10);
+-- -----------------------------------------------------------
+-- SESSION 5 (14 Days Ago)
+-- -----------------------------------------------------------
+WITH s AS (
+  INSERT INTO workout_sessions (date)
+  VALUES (CURRENT_DATE - INTERVAL '14 day')
+  RETURNING id
+)
+INSERT INTO sets (workout_session_id, exercise_id, set_number, weight, reps)
+SELECT s.id, e.exercise_id, e.set_number, e.weight, e.reps
+FROM (VALUES
+(5, 3, 1, 27.5, 12), (5, 3, 2, 27.5, 12),
+(5, 4, 1, 12.5, 12), (5, 4, 2, 12.5, 12),
+(5, 7, 1, 5, 15), (5, 7, 2, 5, 15),
+(5, 9, 1, 8, 12), (5, 9, 2, 8, 10),
+(5,10, 1, 10, 12), (5,10, 2, 10, 12)
+) AS e(workout_id, exercise_id, set_number, weight, reps), s;
 
--- === SESSION 4 (10 days ago) ===
-INSERT INTO workout_sessions (date) VALUES (CURRENT_DATE - INTERVAL '10 day');
-INSERT INTO sets (workout_session_id, exercise_id, set_number, weight, reps) VALUES
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 1, 1, 17.5, 12),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 1, 2, 17.5, 11),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 2, 1, 22.5, 10),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 2, 2, 22.5, 10),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 3, 1, 25, 12),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 3, 2, 25, 12),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 5, 1, 12.5, 10),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 5, 2, 12.5, 10),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 8, 1, 10, 10),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 8, 2, 10, 8);
-
--- === SESSION 5 (14 days ago) ===
-INSERT INTO workout_sessions (date) VALUES (CURRENT_DATE - INTERVAL '14 day');
-INSERT INTO sets (workout_session_id, exercise_id, set_number, weight, reps) VALUES
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 3, 1, 27.5, 12),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 3, 2, 27.5, 12),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 4, 1, 12.5, 12),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 4, 2, 12.5, 12),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 7, 1, 5, 15),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 7, 2, 5, 15),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 9, 1, 8, 12),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 9, 2, 8, 10),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 10, 1, 10, 12),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 10, 2, 10, 12);
-
--- === SESSION 6 (17 days ago) ===
-INSERT INTO workout_sessions (date) VALUES (CURRENT_DATE - INTERVAL '17 day');
-INSERT INTO sets (workout_session_id, exercise_id, set_number, weight, reps) VALUES
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 5, 1, 12.5, 12),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 5, 2, 12.5, 11),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 6, 1, 7.5, 15),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 6, 2, 7.5, 15),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 8, 1, 7.5, 12),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 8, 2, 7.5, 12),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 11, 1, 20, 12),
-( (SELECT id FROM workout_sessions ORDER BY date DESC LIMIT 1), 11, 2, 20, 12);
+-- -----------------------------------------------------------
+-- SESSION 6 (17 Days Ago)
+-- -----------------------------------------------------------
+WITH s AS (
+  INSERT INTO workout_sessions (date)
+  VALUES (CURRENT_DATE - INTERVAL '17 day')
+  RETURNING id
+)
+INSERT INTO sets (workout_session_id, exercise_id, set_number, weight, reps)
+SELECT s.id, e.exercise_id, e.set_number, e.weight, e.reps
+FROM (VALUES
+(6, 5, 1, 12.5, 12), (6, 5, 2, 12.5, 11),
+(6, 6, 1, 7.5, 15), (6, 6, 2, 7.5, 15),
+(6, 8, 1, 7.5, 12), (6, 8, 2, 7.5, 12),
+(6,11, 1, 20, 12), (6,11, 2, 20, 12)
+) AS e(workout_id, exercise_id, set_number, weight, reps), s;
 ```
 
 ## ✍️ Author
