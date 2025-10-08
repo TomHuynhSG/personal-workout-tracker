@@ -162,14 +162,68 @@ Alternatively, you can run the following SQL script in your Supabase SQL Editor.
 
 ```sql
 -- ===========================================================
--- 🧪 SAMPLE DATA (Progressive Overload Demo)
+-- 🧪 SAMPLE DATA (Chronological: 17d → 14d → 10d → 7d → 4d → 1d → Today)
 -- ===========================================================
 
+-- Clear prior data
 DELETE FROM sets;
 DELETE FROM workout_sessions;
 
 -- -----------------------------------------------------------
--- SESSION 1 (A Week Ago)
+-- SESSION 1 (17 Days Ago)
+-- -----------------------------------------------------------
+WITH s AS (
+  INSERT INTO workout_sessions (date)
+  VALUES (CURRENT_DATE - INTERVAL '17 day')
+  RETURNING id
+)
+INSERT INTO sets (workout_session_id, exercise_id, set_number, weight, reps)
+SELECT s.id, e.exercise_id, e.set_number, e.weight, e.reps
+FROM (VALUES
+(6, 5, 1, 12.5, 12), (6, 5, 2, 12.5, 11),
+(6, 6, 1, 7.5, 15), (6, 6, 2, 7.5, 15),
+(6, 8, 1, 7.5, 12), (6, 8, 2, 7.5, 12),
+(6,11, 1, 20, 12), (6,11, 2, 20, 12)
+) AS e(workout_id, exercise_id, set_number, weight, reps), s;
+
+-- -----------------------------------------------------------
+-- SESSION 2 (14 Days Ago)
+-- -----------------------------------------------------------
+WITH s AS (
+  INSERT INTO workout_sessions (date)
+  VALUES (CURRENT_DATE - INTERVAL '14 day')
+  RETURNING id
+)
+INSERT INTO sets (workout_session_id, exercise_id, set_number, weight, reps)
+SELECT s.id, e.exercise_id, e.set_number, e.weight, e.reps
+FROM (VALUES
+(5, 3, 1, 27.5, 12), (5, 3, 2, 27.5, 12),
+(5, 4, 1, 12.5, 12), (5, 4, 2, 12.5, 12),
+(5, 7, 1, 5, 15),    (5, 7, 2, 5, 15),
+(5, 9, 1, 8, 12),    (5, 9, 2, 8, 10),
+(5,10, 1, 10, 12),   (5,10, 2, 10, 12)
+) AS e(workout_id, exercise_id, set_number, weight, reps), s;
+
+-- -----------------------------------------------------------
+-- SESSION 3 (10 Days Ago)
+-- -----------------------------------------------------------
+WITH s AS (
+  INSERT INTO workout_sessions (date)
+  VALUES (CURRENT_DATE - INTERVAL '10 day')
+  RETURNING id
+)
+INSERT INTO sets (workout_session_id, exercise_id, set_number, weight, reps)
+SELECT s.id, e.exercise_id, e.set_number, e.weight, e.reps
+FROM (VALUES
+(4, 1, 1, 17.5, 12), (4, 1, 2, 17.5, 11),
+(4, 2, 1, 22.5, 10), (4, 2, 2, 22.5, 10),
+(4, 3, 1, 25, 12),   (4, 3, 2, 25, 12),
+(4, 5, 1, 12.5, 10), (4, 5, 2, 12.5, 10),
+(4, 8, 1, 10, 10),   (4, 8, 2, 10, 8)
+) AS e(workout_id, exercise_id, set_number, weight, reps), s;
+
+-- -----------------------------------------------------------
+-- SESSION 4 (7 Days Ago)
 -- -----------------------------------------------------------
 WITH s AS (
   INSERT INTO workout_sessions (date)
@@ -179,19 +233,19 @@ WITH s AS (
 INSERT INTO sets (workout_session_id, exercise_id, set_number, weight, reps)
 SELECT s.id, e.exercise_id, e.set_number, e.weight, e.reps
 FROM (VALUES
-(1, 1, 1, 20, 12), (1, 1, 2, 20, 10), (1, 1, 3, 22.5, 8),
-(1, 2, 1, 25, 10), (1, 2, 2, 25, 9),
-(1, 3, 1, 30, 12), (1, 3, 2, 30, 11),
-(1, 4, 1, 15, 12), (1, 4, 2, 15, 12),
-(1, 5, 1, 15, 10), (1, 5, 2, 15, 9),
-(1, 6, 1, 8, 15),  (1, 6, 2, 8, 14),
-(1, 8, 1, 10, 12), (1, 8, 2, 10, 11),
-(1,10, 1, 12.5, 12), (1,10, 2, 12.5, 10),
+(1, 1, 1, 20, 12),  (1, 1, 2, 20, 10), (1, 1, 3, 22.5, 8),
+(1, 2, 1, 25, 10),  (1, 2, 2, 25, 9),
+(1, 3, 1, 30, 12),  (1, 3, 2, 30, 11),
+(1, 4, 1, 15, 12),  (1, 4, 2, 15, 12),
+(1, 5, 1, 15, 10),  (1, 5, 2, 15, 9),
+(1, 6, 1, 8, 15),   (1, 6, 2, 8, 14),
+(1, 8, 1, 10, 12),  (1, 8, 2, 10, 11),
+(1,10, 1, 12.5, 12),(1,10, 2, 12.5, 10),
 (1,11, 1, 25, 12),  (1,11, 2, 25, 12)
 ) AS e(workout_id, exercise_id, set_number, weight, reps), s;
 
 -- -----------------------------------------------------------
--- SESSION 2 (4 Days Ago)
+-- SESSION 5 (4 Days Ago)
 -- -----------------------------------------------------------
 WITH s AS (
   INSERT INTO workout_sessions (date)
@@ -202,18 +256,18 @@ INSERT INTO sets (workout_session_id, exercise_id, set_number, weight, reps)
 SELECT s.id, e.exercise_id, e.set_number, e.weight, e.reps
 FROM (VALUES
 (2, 1, 1, 22.5, 10), (2, 1, 2, 22.5, 9), (2, 1, 3, 22.5, 8),
-(2, 2, 1, 27.5, 8), (2, 2, 2, 27.5, 7),
+(2, 2, 1, 27.5, 8),  (2, 2, 2, 27.5, 7),
 (2, 3, 1, 32.5, 10), (2, 3, 2, 32.5, 10),
 (2, 4, 1, 17.5, 10), (2, 4, 2, 17.5, 10),
-(2, 5, 1, 17.5, 8), (2, 5, 2, 17.5, 8),
-(2, 6, 1, 10, 12), (2, 6, 2, 10, 11),
-(2, 9, 1, 10, 10), (2, 9, 2, 10, 9),
-(2,10, 1, 15, 10), (2,10, 2, 15, 9),
+(2, 5, 1, 17.5, 8),  (2, 5, 2, 17.5, 8),
+(2, 6, 1, 10, 12),   (2, 6, 2, 10, 11),
+(2, 9, 1, 10, 10),   (2, 9, 2, 10, 9),
+(2,10, 1, 15, 10),   (2,10, 2, 15, 9),
 (2,11, 1, 27.5, 10), (2,11, 2, 27.5, 10)
 ) AS e(workout_id, exercise_id, set_number, weight, reps), s;
 
 -- -----------------------------------------------------------
--- SESSION 3 (Yesterday)
+-- SESSION 6 (Yesterday)
 -- -----------------------------------------------------------
 WITH s AS (
   INSERT INTO workout_sessions (date)
@@ -228,63 +282,46 @@ FROM (VALUES
 (3, 3, 1, 32.5, 12), (3, 3, 2, 32.5, 11),
 (3, 4, 1, 17.5, 12), (3, 4, 2, 17.5, 11),
 (3, 5, 1, 17.5, 10), (3, 5, 2, 17.5, 9),
-(3, 7, 1, 8, 12), (3, 7, 2, 8, 12),
+(3, 7, 1, 8, 12),    (3, 7, 2, 8, 12),
 (3, 8, 1, 12.5, 10), (3, 8, 2, 12.5, 9),
-(3,10, 1, 15, 12), (3,10, 2, 15, 11),
-(3,11, 1, 30, 10), (3,11, 2, 30, 10)
+(3,10, 1, 15, 12),   (3,10, 2, 15, 11),
+(3,11, 1, 30, 10),   (3,11, 2, 30, 10)
 ) AS e(workout_id, exercise_id, set_number, weight, reps), s;
 
 -- -----------------------------------------------------------
--- SESSION 4 (10 Days Ago)
+-- SESSION 7 (Today) — All Exercises Completed, PR/High Volume
 -- -----------------------------------------------------------
+-- Bump loads/reps beyond previous bests for a clear “record” day.
 WITH s AS (
   INSERT INTO workout_sessions (date)
-  VALUES (CURRENT_DATE - INTERVAL '10 day')
+  VALUES (CURRENT_DATE)
   RETURNING id
 )
 INSERT INTO sets (workout_session_id, exercise_id, set_number, weight, reps)
 SELECT s.id, e.exercise_id, e.set_number, e.weight, e.reps
 FROM (VALUES
-(4, 1, 1, 17.5, 12), (4, 1, 2, 17.5, 11),
-(4, 2, 1, 22.5, 10), (4, 2, 2, 22.5, 10),
-(4, 3, 1, 25, 12), (4, 3, 2, 25, 12),
-(4, 5, 1, 12.5, 10), (4, 5, 2, 12.5, 10),
-(4, 8, 1, 10, 10), (4, 8, 2, 10, 8)
-) AS e(workout_id, exercise_id, set_number, weight, reps), s;
-
--- -----------------------------------------------------------
--- SESSION 5 (14 Days Ago)
--- -----------------------------------------------------------
-WITH s AS (
-  INSERT INTO workout_sessions (date)
-  VALUES (CURRENT_DATE - INTERVAL '14 day')
-  RETURNING id
-)
-INSERT INTO sets (workout_session_id, exercise_id, set_number, weight, reps)
-SELECT s.id, e.exercise_id, e.set_number, e.weight, e.reps
-FROM (VALUES
-(5, 3, 1, 27.5, 12), (5, 3, 2, 27.5, 12),
-(5, 4, 1, 12.5, 12), (5, 4, 2, 12.5, 12),
-(5, 7, 1, 5, 15), (5, 7, 2, 5, 15),
-(5, 9, 1, 8, 12), (5, 9, 2, 8, 10),
-(5,10, 1, 10, 12), (5,10, 2, 10, 12)
-) AS e(workout_id, exercise_id, set_number, weight, reps), s;
-
--- -----------------------------------------------------------
--- SESSION 6 (17 Days Ago)
--- -----------------------------------------------------------
-WITH s AS (
-  INSERT INTO workout_sessions (date)
-  VALUES (CURRENT_DATE - INTERVAL '17 day')
-  RETURNING id
-)
-INSERT INTO sets (workout_session_id, exercise_id, set_number, weight, reps)
-SELECT s.id, e.exercise_id, e.set_number, e.weight, e.reps
-FROM (VALUES
-(6, 5, 1, 12.5, 12), (6, 5, 2, 12.5, 11),
-(6, 6, 1, 7.5, 15), (6, 6, 2, 7.5, 15),
-(6, 8, 1, 7.5, 12), (6, 8, 2, 7.5, 12),
-(6,11, 1, 20, 12), (6,11, 2, 20, 12)
+-- 1) Incline Dumbbell Press (Prev best load: 25; now 27.5)
+(7, 1, 1, 27.5, 10), (7, 1, 2, 27.5, 9), (7, 1, 3, 27.5, 8),
+-- 2) Flat Dumbbell Press (Prev best load: 30; now 32.5)
+(7, 2, 1, 32.5, 8),  (7, 2, 2, 32.5, 7),
+-- 3) Chest-Supported Row (Prev best: 32.5; now 35)
+(7, 3, 1, 35, 12),   (7, 3, 2, 35, 11),
+-- 4) Single Arm Row (Prev best: 17.5; now 20)
+(7, 4, 1, 20, 12),   (7, 4, 2, 20, 10),
+-- 5) Seated DB Press (Prev best: 17.5; now 20)
+(7, 5, 1, 20, 10),   (7, 5, 2, 20, 9),
+-- 6) Lateral Raise (Prev best: 10; now 12.5)
+(7, 6, 1, 12.5, 12), (7, 6, 2, 12.5, 12),
+-- 7) Wall-Leaning Lateral Raise (Prev best: 8; now 10)
+(7, 7, 1, 10, 12),   (7, 7, 2, 10, 12),
+-- 8) Seated Incline Curls (Prev best: 12.5; now 15)
+(7, 8, 1, 15, 10),   (7, 8, 2, 15, 9),
+-- 9) Preacher Curls (Prev best: 10; now 12.5)
+(7, 9, 1, 12.5, 10), (7, 9, 2, 12.5, 9),
+-- 10) Overhead DB Extension (Prev best: 15; now 17.5)
+(7,10, 1, 17.5, 12), (7,10, 2, 17.5, 10),
+-- 11) Dumbbell RDL (Prev best load: 30; now 35)
+(7,11, 1, 35, 10),   (7,11, 2, 35, 8)
 ) AS e(workout_id, exercise_id, set_number, weight, reps), s;
 ```
 
