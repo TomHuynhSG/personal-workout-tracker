@@ -26,6 +26,7 @@ A modern, feature-rich, single-page web application designed to help you track y
     - **Touch-Friendly Interface:** All buttons, inputs, and interactive elements are sized for easy use on mobile and tablet devices.
 - **Add New Exercises:** Easily expand your exercise library on the fly.
 - **Data Portability:** Backup your entire workout history to a JSON file and restore it at any time.
+- **PWA Ready:** Installable on your home screen for a full-screen, app-like experience on mobile devices.
 
 ## 📸 Screenshots
 
@@ -79,6 +80,10 @@ To get this project running on your local machine, follow these steps:
 
 4.  **Run the Application:**
     - Simply open the `index.html` file in your web browser. A live server extension for your code editor is recommended for the best experience.
+
+5.  **(Optional) Add App Icons for PWA:**
+    - For the "Add to Home Screen" feature to work correctly, create an `icons` folder in the root directory.
+    - Inside the `icons` folder, place your app icons named `icon-192x192.png` and `icon-512x512.png`.
 
 ## 📄 `setup.sql`
 

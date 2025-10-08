@@ -1,0 +1,21 @@
+{
+    "name": "Personal Workout Tracker",
+    "short_name": "Workout Tracker",
+    "start_url": "index.html",
+    "display": "standalone",
+    "background_color": "#121212",
+    "theme_color": "#121212",
+    "description": "A personal workout tracker to monitor your progress.",
+    "icons": [
+        {
+            "src": "icons/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
