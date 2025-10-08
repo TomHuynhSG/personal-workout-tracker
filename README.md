@@ -167,7 +167,7 @@ INSERT INTO exercises (name, muscle_group, ordering) VALUES
 
 To test the application's features with some realistic data, you can use the **Restore** feature on the "Backup / Restore" page to upload the sample data file located at `backup_data/workout-backup-sample.json`.
 
-Alternatively, you can run the following SQL script in your Supabase SQL Editor. This will populate the database with three workout sessions showing progressive overload.
+Alternatively, you can run the following SQL script in your Supabase SQL Editor. This will populate the database with six workout sessions showing progressive overload.
 
 ```sql
 -- ===========================================================
