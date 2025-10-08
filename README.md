@@ -1,6 +1,14 @@
-# 🏋️ Personal Workout Tracker
+<p align="center">
+  <img src="icons/icon-512x512.png" alt="Workout Tracker Logo" width="200">
+</p>
 
-A modern, feature-rich, single-page web application designed to help you track your workout progress with ease. Built with vanilla HTML, CSS, and JavaScript, and powered by a Supabase backend, this application provides an intuitive interface for logging, reviewing, and analyzing your training sessions.
+<h1 align="center">🏋️ Personal Workout Tracker</h1>
+
+<p align="center">
+  <strong>Your ultimate companion for tracking gains, smashing goals, and building a stronger you.</strong>
+  <br>
+  A modern, feature-rich, single-page web application designed to help you track your workout progress with ease.
+</p>
 
 ## ✨ Features
 
