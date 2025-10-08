@@ -570,6 +570,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
         });
 
+        // Calculate workouts this year
+        const startOfYear = new Date(todayForWeek.getFullYear(), 0, 1);
+        let workoutsThisYear = 0;
+        workoutDates.forEach(dateStr => {
+            if (new Date(dateStr) >= startOfYear) {
+                workoutsThisYear++;
+            }
+        });
+
         streakContainer.innerHTML = `
             <span class="badge bg-warning text-dark fs-5 mb-1 d-block">
                 🔥 ${streak} Day Streak
@@ -577,8 +586,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             <span class="badge bg-info text-dark fs-5 d-block mb-1">
                 💪 ${workoutsThisWeek} Workouts This Week
             </span>
-            <span class="badge bg-success text-white fs-5 d-block">
+            <span class="badge bg-success text-white fs-5 d-block mb-1">
                 🗓️ ${workoutsThisMonth} Workouts This Month
+            </span>
+            <span class="badge bg-primary text-white fs-5 d-block">
+                🎉 ${workoutsThisYear} Workouts This Year
             </span>
         `;
     }
