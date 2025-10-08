@@ -25,6 +25,7 @@ A modern, feature-rich, single-page web application designed to help you track y
     - **Dark Mode:** A sleek dark theme that can be toggled on/off and is saved to your browser's preferences.
     - **Touch-Friendly Interface:** All buttons, inputs, and interactive elements are sized for easy use on mobile and tablet devices.
 - **Add New Exercises:** Easily expand your exercise library on the fly.
+- **Data Portability:** Backup your entire workout history to a JSON file and restore it at any time.
 
 ## 📸 Screenshots
 
@@ -133,7 +134,9 @@ INSERT INTO exercises (name, muscle_group) VALUES
 
 ## 🧪 Adding Sample Data (Optional)
 
-To test the application's features with some realistic data, you can run the following SQL script in your Supabase SQL Editor. This will populate the database with three workout sessions showing progressive overload.
+To test the application's features with some realistic data, you can use the **Restore** feature on the "Backup / Restore" page to upload the sample data file located at `backup_data/workout-backup-sample.json`.
+
+Alternatively, you can run the following SQL script in your Supabase SQL Editor. This will populate the database with three workout sessions showing progressive overload.
 
 ```sql
 -- Clear any existing workout data before inserting new samples
