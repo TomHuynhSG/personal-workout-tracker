@@ -33,17 +33,18 @@ A modern, feature-rich, single-page web application designed to help you track y
 
 Here's a look at the application in action.
 
-*Main Dashboard (Light Mode)*
-![Dashboard Light Mode](screenshots/homepage-light.png)
-
-*Main Dashboard (Dark Mode)*
-![Dashboard Dark Mode](screenshots/homepage-dark.png)
-
-*Workout Session (Light Mode)*
-![Workout Session Light Mode](screenshots/workout-light.png)
-
-*Workout Session (Dark Mode)*
-![Workout Session Dark Mode](screenshots/workout-dark.png)
+| Light Mode | Dark Mode |
+| :---: | :---: |
+| **Main Dashboard** | **Main Dashboard** |
+| ![Dashboard Light Mode](screenshots/homepage-light.png) | ![Dashboard Dark Mode](screenshots/homepage-dark.png) |
+| **Workout Session** | **Workout Session** |
+| ![Workout Session Light Mode](screenshots/workout-light.png) | ![Workout Session Dark Mode](screenshots/workout-dark.png) |
+| **Workout Session (Mobile)** | **Workout Session (Mobile)** |
+| ![Workout Mobile Light](screenshots/workout-mobile-light.png) | ![Workout Mobile Dark](screenshots/workout-mobile-dark.png) |
+| **Manage Exercises** | **Backup & Restore** |
+| ![Manage Exercises](screenshots/manage-exercises.png) | ![Backup & Restore](screenshots/backup-restore-page.png) |
+| **App Icon** | |
+| ![App Icon](screenshots/app-icon-on-mobile-iphone.png) | |
 
 ## 🛠️ Tech Stack
 
