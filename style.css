@@ -72,6 +72,19 @@ body {
 #new-workout-btn {
     height: 100px; /* Make button taller */
     font-size: 1.5rem; /* Make text bigger */
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(0, 123, 255, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 20px rgba(0, 123, 255, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(0, 123, 255, 0);
+    }
 }
 
 /* --- Responsive Table for Mobile --- */
