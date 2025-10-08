@@ -51,7 +51,12 @@ body {
 }
 
 .sets-container {
-    white-space: nowrap;
+    white-space: normal; /* Allow wrapping of multiple sets */
+}
+
+.set {
+    display: flex;
+    align-items: center;
 }
 
 .volume-badge {
