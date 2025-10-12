@@ -166,6 +166,25 @@ INSERT INTO exercises (name, muscle_group, ordering) VALUES
 
 ```
 
+## 🏋️‍♀️ Alternative Exercises
+
+For users who may not have dumbbells or prefer other equipment, here is a list of alternative exercises for the default routine. You can add these to your master list via the "Manage Exercises" page.
+
+| Dumbbell Exercise                      | Alternative Exercises                                                              |
+| :------------------------------------- | :--------------------------------------------------------------------------------- |
+| Incline Dumbbell Press (Chest)         | Barbell Incline Press, Smith Machine Incline Press, Incline Push-ups, Hammer Strength Incline Press |
+| Flat Dumbbell Press (Chest)            | Barbell Bench Press, Push-ups, Chest Press Machine, Dips (Chest Variation)         |
+| Dumbbell Chest-Supported Row (Back)    | T-Bar Row, Seated Cable Row, Bent-Over Barbell Row, Machine Row                    |
+| Single Arm Dumbbell Row (Back)         | Bent-Over Barbell Row, Seated Cable Row, Lat Pulldown Machine, Pull-ups            |
+| Seated Dumbbell Press (Shoulders)      | Barbell Overhead Press (Standing or Seated), Shoulder Press Machine, Arnold Press  |
+| Dumbbell Lateral Raise (Shoulders)     | Cable Lateral Raise, Lateral Raise Machine, Upright Rows                           |
+| Wall Leaning Dumbbell Lateral Raise (Shoulders) | Cable Lateral Raise, Leaning Cable Lateral Raise, Banded Lateral Raise             |
+| Seated Incline Dumbbell Curls (Arms)   | Barbell Curls, Preacher Curls (Machine or Barbell), Cable Curls, Chin-ups          |
+| Preacher Dumbbell Curls (Arms)         | Preacher Curl Machine, Barbell Preacher Curls, Concentration Curls                 |
+| Standing Overhead Dumbbell Extension (Arms) | Tricep Pushdowns (Cable), Skull Crushers (Barbell/EZ-Bar), Dips, Close-Grip Bench Press |
+| Dumbbell Romanian Deadlifts (Legs)     | Barbell Romanian Deadlifts, Good Mornings, Hyperextensions, Leg Curls              |
+
+
 ## 🧪 Adding Sample Data (Optional)
 
 To test the application's features with some realistic data, you can use the **Restore** feature on the "Backup / Restore" page to upload the sample data file located at `backup_data/workout-backup-sample.json`.
