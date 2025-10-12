@@ -13,6 +13,8 @@
 ## ✨ Features
 
 - **Interactive Workout Sessions:**
+    - **Workout Timer:** Automatically track your session duration with a start/pause/resume timer.
+    - **Rest Timer:** A 90-second countdown timer automatically appears after completing a set to guide your rest periods.
     - Start a new workout or edit any past session.
     - Automatically populates new sessions with the number of sets from your last performance of each exercise.
     - Previous weight and reps are shown as placeholders to encourage progressive overload.
@@ -128,6 +130,7 @@ CREATE TABLE exercises (
 CREATE TABLE workout_sessions (
     id BIGINT PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
     date DATE NOT NULL,
+    duration INT, -- Duration in seconds
     created_at TIMESTAMPTZ DEFAULT now() NOT NULL
 );
 
@@ -182,8 +185,8 @@ DELETE FROM workout_sessions;
 -- SESSION 1 (17 Days Ago)
 -- -----------------------------------------------------------
 WITH s AS (
-  INSERT INTO workout_sessions (date)
-  VALUES (CURRENT_DATE - INTERVAL '17 day')
+  INSERT INTO workout_sessions (date, duration)
+  VALUES (CURRENT_DATE - INTERVAL '17 day', 2700) -- 45 minutes
   RETURNING id
 )
 INSERT INTO sets (workout_session_id, exercise_id, set_number, weight, reps)
@@ -199,8 +202,8 @@ FROM (VALUES
 -- SESSION 2 (14 Days Ago)
 -- -----------------------------------------------------------
 WITH s AS (
-  INSERT INTO workout_sessions (date)
-  VALUES (CURRENT_DATE - INTERVAL '14 day')
+  INSERT INTO workout_sessions (date, duration)
+  VALUES (CURRENT_DATE - INTERVAL '14 day', 2800) -- ~47 minutes
   RETURNING id
 )
 INSERT INTO sets (workout_session_id, exercise_id, set_number, weight, reps)
@@ -217,8 +220,8 @@ FROM (VALUES
 -- SESSION 3 (10 Days Ago)
 -- -----------------------------------------------------------
 WITH s AS (
-  INSERT INTO workout_sessions (date)
-  VALUES (CURRENT_DATE - INTERVAL '10 day')
+  INSERT INTO workout_sessions (date, duration)
+  VALUES (CURRENT_DATE - INTERVAL '10 day', 3000) -- 50 minutes
   RETURNING id
 )
 INSERT INTO sets (workout_session_id, exercise_id, set_number, weight, reps)
@@ -235,8 +238,8 @@ FROM (VALUES
 -- SESSION 4 (7 Days Ago)
 -- -----------------------------------------------------------
 WITH s AS (
-  INSERT INTO workout_sessions (date)
-  VALUES (CURRENT_DATE - INTERVAL '7 day')
+  INSERT INTO workout_sessions (date, duration)
+  VALUES (CURRENT_DATE - INTERVAL '7 day', 3300) -- 55 minutes
   RETURNING id
 )
 INSERT INTO sets (workout_session_id, exercise_id, set_number, weight, reps)
@@ -257,8 +260,8 @@ FROM (VALUES
 -- SESSION 5 (4 Days Ago)
 -- -----------------------------------------------------------
 WITH s AS (
-  INSERT INTO workout_sessions (date)
-  VALUES (CURRENT_DATE - INTERVAL '4 day')
+  INSERT INTO workout_sessions (date, duration)
+  VALUES (CURRENT_DATE - INTERVAL '4 day', 3600) -- 60 minutes
   RETURNING id
 )
 INSERT INTO sets (workout_session_id, exercise_id, set_number, weight, reps)
@@ -279,8 +282,8 @@ FROM (VALUES
 -- SESSION 6 (Yesterday)
 -- -----------------------------------------------------------
 WITH s AS (
-  INSERT INTO workout_sessions (date)
-  VALUES (CURRENT_DATE - INTERVAL '1 day')
+  INSERT INTO workout_sessions (date, duration)
+  VALUES (CURRENT_DATE - INTERVAL '1 day', 3800) -- ~63 minutes
   RETURNING id
 )
 INSERT INTO sets (workout_session_id, exercise_id, set_number, weight, reps)
@@ -302,8 +305,8 @@ FROM (VALUES
 -- -----------------------------------------------------------
 -- Bump loads/reps beyond previous bests for a clear “record” day.
 WITH s AS (
-  INSERT INTO workout_sessions (date)
-  VALUES (CURRENT_DATE)
+  INSERT INTO workout_sessions (date, duration)
+  VALUES (CURRENT_DATE, 4200) -- 70 minutes
   RETURNING id
 )
 INSERT INTO sets (workout_session_id, exercise_id, set_number, weight, reps)

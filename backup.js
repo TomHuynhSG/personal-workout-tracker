@@ -126,7 +126,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // 3. Restore sessions and create an ID map { oldId: newId }
             const oldSessionIdMap = {};
-            const sanitizedSessions = backupData.workout_sessions.map(({ id, created_at, ...rest }) => rest);
+            const sanitizedSessions = backupData.workout_sessions.map(({ id, created_at, ...rest }) => ({
+                ...rest,
+                duration: rest.duration || null // Ensure duration is null if not present
+            }));
             const { data: newSessions, error: sessionsError } = await supabaseClient
                 .from('workout_sessions')
                 .insert(sanitizedSessions)

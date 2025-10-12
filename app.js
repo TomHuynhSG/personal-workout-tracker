@@ -24,6 +24,34 @@ document.addEventListener('DOMContentLoaded', async () => {
     const workoutForm = document.getElementById('workout-form');
     const homeLink = document.getElementById('home-link');
     const themeToggleBtn = document.getElementById('theme-toggle-btn');
+    const timerContainer = document.getElementById('timer-container');
+
+    let timerInterval = null;
+    let timerSeconds = 0;
+
+    function formatTime(seconds) {
+        const h = Math.floor(seconds / 3600).toString().padStart(2, '0');
+        const m = Math.floor((seconds % 3600) / 60).toString().padStart(2, '0');
+        const s = (seconds % 60).toString().padStart(2, '0');
+        return `${h}:${m}:${s}`;
+    }
+
+    function startTimer() {
+        if (timerInterval) clearInterval(timerInterval);
+        timerInterval = setInterval(() => {
+            timerSeconds++;
+            document.getElementById('timer-display').textContent = formatTime(timerSeconds);
+        }, 1000);
+    }
+
+    function stopTimer() {
+        clearInterval(timerInterval);
+    }
+
+    function resetTimer() {
+        stopTimer();
+        timerSeconds = 0;
+    }
 
     const applyTheme = (theme) => {
         if (theme === 'dark') {
@@ -55,13 +83,40 @@ document.addEventListener('DOMContentLoaded', async () => {
         homepage.classList.add('d-none');
         workoutSession.classList.remove('d-none');
         workoutForm.dataset.sessionId = sessionId || '';
+        timerContainer.innerHTML = ''; // Clear previous timer/duration
 
         if (sessionId) {
-            const { data: sessionData } = await supabaseClient.from('workout_sessions').select('date').eq('id', sessionId).single();
+            const { data: sessionData } = await supabaseClient.from('workout_sessions').select('date, duration').eq('id', sessionId).single();
             sessionDate.textContent = `Workout Session - ${formatDate(sessionData.date)}`;
+            if (sessionData.duration) {
+                timerContainer.innerHTML = `<span class="badge bg-info fs-5">Duration: ${formatTime(sessionData.duration)}</span>`;
+            }
         } else {
             const today = new Date();
             sessionDate.textContent = `Workout Session - ${formatDate(today)}`;
+            timerContainer.innerHTML = `
+                <div class="d-flex flex-column flex-md-row align-items-center">
+                    <span id="timer-display" class="badge bg-success fs-5 mb-1 mb-md-0 me-md-2">00:00:00</span>
+                    <button type="button" id="timer-toggle-btn" class="btn btn-sm btn-warning">Pause</button>
+                </div>
+            `;
+            resetTimer();
+            startTimer();
+
+            document.getElementById('timer-toggle-btn').addEventListener('click', (e) => {
+                const btn = e.target;
+                if (btn.textContent === 'Pause') {
+                    stopTimer();
+                    btn.textContent = 'Resume';
+                    btn.classList.remove('btn-warning');
+                    btn.classList.add('btn-success');
+                } else {
+                    startTimer();
+                    btn.textContent = 'Pause';
+                    btn.classList.remove('btn-success');
+                    btn.classList.add('btn-warning');
+                }
+            });
         }
         
         await populateWorkoutTable(sessionId);
@@ -259,8 +314,49 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (e.target.classList.contains('weight-input') || e.target.classList.contains('reps-input')) {
             const row = e.target.closest('tr');
             calculateVolume(row);
+
+            const setElement = e.target.closest('.set');
+            const weightInput = setElement.querySelector('.weight-input');
+            const repsInput = setElement.querySelector('.reps-input');
+
+            if (weightInput.value && repsInput.value) {
+                startRestTimer(setElement);
+            }
         }
     });
+
+    function startRestTimer(setElement) {
+        // Clear any existing timer for this set
+        const existingTimer = setElement.querySelector('.rest-timer');
+        if (existingTimer) {
+            clearInterval(existingTimer.intervalId);
+            existingTimer.remove();
+        }
+
+        const timerBadge = document.createElement('span');
+        timerBadge.className = 'badge bg-info rest-timer';
+        timerBadge.style.position = 'absolute';
+        timerBadge.style.top = '-10px';
+        timerBadge.style.left = '0px';
+        
+        let timeLeft = 90;
+        timerBadge.textContent = `1:30`;
+        setElement.appendChild(timerBadge);
+
+        const intervalId = setInterval(() => {
+            timeLeft--;
+            const minutes = Math.floor(timeLeft / 60);
+            const seconds = timeLeft % 60;
+            timerBadge.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+            if (timeLeft <= 0) {
+                clearInterval(intervalId);
+                timerBadge.remove();
+            }
+        }, 1000);
+
+        timerBadge.intervalId = intervalId;
+    }
 
     async function calculateVolume(row) {
         const sets = row.querySelectorAll('.set');
@@ -341,6 +437,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // If it's a new session, create it first
         if (!sessionId) {
+            stopTimer();
             const localDate = new Date();
             const year = localDate.getFullYear();
             const month = String(localDate.getMonth() + 1).padStart(2, '0');
@@ -349,7 +446,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const { data: sessionData, error: sessionError } = await supabaseClient
                 .from('workout_sessions')
-                .insert({ date: today })
+                .insert({ date: today, duration: timerSeconds })
                 .select('id')
                 .single();
 
