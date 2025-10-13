@@ -38,6 +38,7 @@
 - **Data Portability:** Backup your entire workout history to a JSON file and restore it at any time.
 - **PWA Ready:** Installable on your home screen for a full-screen, app-like experience on mobile devices.
 - **Full Exercise Management:** A dedicated page to perform CRUD operations on all exercises and customize the default workout routine.
+- **Configurable Timers:** Customize the rest timer duration and toggle the end-of-timer sound effect to your liking.
 
 ## 📸 Screenshots
 
@@ -163,6 +164,18 @@ INSERT INTO exercises (name, muscle_group, ordering) VALUES
 ('Preacher Dumbbell Curls', 'Arms', 9),
 ('Standing Overhead Dumbbell Extension', 'Arms', 10),
 ('Dumbbell Romanian Deadlifts', 'Legs', 11);
+
+-- -----------------------------------------------------------
+-- Create the settings table
+-- -----------------------------------------------------------
+CREATE TABLE settings (
+    id BIGINT PRIMARY KEY, -- We will only ever have one row with id = 1
+    rest_timer_duration INT DEFAULT 90 NOT NULL,
+    play_sound_on_timer_end BOOLEAN DEFAULT TRUE NOT NULL
+);
+
+-- Insert the single row for settings
+INSERT INTO settings (id, rest_timer_duration, play_sound_on_timer_end) VALUES (1, 90, true);
 
 ```
 

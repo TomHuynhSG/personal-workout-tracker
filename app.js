@@ -175,8 +175,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     setsToLoad.forEach(s => {
                         setsHtml += `
                             <div class="set mt-2 position-relative">
-                                <input type="number" class="form-control d-inline-block set-input weight-input" placeholder="${s.weight || 'kg'}" value="${s.weight || ''}">
-                                <input type="number" class="form-control d-inline-block set-input reps-input" placeholder="${s.reps || 'reps'}" value="${s.reps || ''}">
+                                <input type="number" inputmode="decimal" pattern="[0-9]*" class="form-control d-inline-block set-input weight-input" placeholder="${s.weight || 'kg'}" value="${s.weight || ''}">
+                                <input type="number" inputmode="decimal" pattern="[0-9]*" class="form-control d-inline-block set-input reps-input" placeholder="${s.reps || 'reps'}" value="${s.reps || ''}">
                             </div>
                         `;
                     });
@@ -186,8 +186,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     setsForPlaceholders.forEach(s => {
                         setsHtml += `
                             <div class="set mt-2 position-relative">
-                                <input type="number" class="form-control d-inline-block set-input weight-input" placeholder="${s.weight || 'kg'}">
-                                <input type="number" class="form-control d-inline-block set-input reps-input" placeholder="${s.reps || 'reps'}">
+                                <input type="number" inputmode="decimal" pattern="[0-9]*" class="form-control d-inline-block set-input weight-input" placeholder="${s.weight || 'kg'}">
+                                <input type="number" inputmode="decimal" pattern="[0-9]*" class="form-control d-inline-block set-input reps-input" placeholder="${s.reps || 'reps'}">
                             </div>
                         `;
                     });
@@ -198,8 +198,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (setsHtml === '') {
                 setsHtml = `
                     <div class="set mt-2 position-relative">
-                        <input type="number" class="form-control d-inline-block set-input weight-input" placeholder="kg">
-                        <input type="number" class="form-control d-inline-block set-input reps-input" placeholder="reps">
+                        <input type="number" inputmode="decimal" pattern="[0-9]*" class="form-control d-inline-block set-input weight-input" placeholder="kg">
+                        <input type="number" inputmode="decimal" pattern="[0-9]*" class="form-control d-inline-block set-input reps-input" placeholder="reps">
                     </div>
                 `;
             }
@@ -290,8 +290,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             const lastWeightPlaceholder = setsContainer.querySelector('.weight-input:last-of-type')?.placeholder || 'kg';
             const lastRepsPlaceholder = setsContainer.querySelector('.reps-input:last-of-type')?.placeholder || 'reps';
             newSet.innerHTML = `
-                <input type="number" class="form-control d-inline-block set-input weight-input" placeholder="${lastWeightPlaceholder}">
-                <input type="number" class="form-control d-inline-block set-input reps-input" placeholder="${lastRepsPlaceholder}">
+                <input type="number" inputmode="decimal" pattern="[0-9]*" class="form-control d-inline-block set-input weight-input" placeholder="${lastWeightPlaceholder}">
+                <input type="number" inputmode="decimal" pattern="[0-9]*" class="form-control d-inline-block set-input reps-input" placeholder="${lastRepsPlaceholder}">
             `;
             setsContainer.appendChild(newSet);
         } else if (e.target.classList.contains('delete-set-btn')) {
@@ -325,7 +325,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 
-    function startRestTimer(setElement) {
+    async function startRestTimer(setElement) {
+        const { data: settings, error } = await supabaseClient
+            .from('settings')
+            .select('*')
+            .eq('id', 1)
+            .single();
+
+        if (error) {
+            console.error('Error fetching settings:', error);
+            return;
+        }
+
         // Clear any existing timer for this set
         const existingTimer = setElement.querySelector('.rest-timer');
         if (existingTimer) {
@@ -339,8 +350,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         timerBadge.style.top = '-10px';
         timerBadge.style.left = '0px';
         
-        let timeLeft = 90;
-        timerBadge.textContent = `1:30`;
+        let timeLeft = settings.rest_timer_duration;
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        timerBadge.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
         setElement.appendChild(timerBadge);
 
         const intervalId = setInterval(() => {
@@ -352,6 +365,10 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (timeLeft <= 0) {
                 clearInterval(intervalId);
                 timerBadge.remove();
+                if (settings.play_sound_on_timer_end) {
+                    const audio = new Audio('sound/timer-up.mp3');
+                    audio.play();
+                }
             }
         }, 1000);
 
@@ -594,16 +611,16 @@ document.addEventListener('DOMContentLoaded', async () => {
             setsInLastSession.forEach(s => {
                 setsHtml += `
                     <div class="set mt-2 position-relative">
-                        <input type="number" class="form-control d-inline-block set-input weight-input" placeholder="${s.weight || 'kg'}">
-                        <input type="number" class="form-control d-inline-block set-input reps-input" placeholder="${s.reps || 'reps'}">
+                        <input type="number" inputmode="decimal" pattern="[0-9]*" class="form-control d-inline-block set-input weight-input" placeholder="${s.weight || 'kg'}">
+                        <input type="number" inputmode="decimal" pattern="[0-9]*" class="form-control d-inline-block set-input reps-input" placeholder="${s.reps || 'reps'}">
                     </div>
                 `;
             });
         } else {
             setsHtml = `
                 <div class="set mt-2 position-relative">
-                    <input type="number" class="form-control d-inline-block set-input weight-input" placeholder="kg">
-                    <input type="number" class="form-control d-inline-block set-input reps-input" placeholder="reps">
+                    <input type="number" inputmode="decimal" pattern="[0-9]*" class="form-control d-inline-block set-input weight-input" placeholder="kg">
+                    <input type="number" inputmode="decimal" pattern="[0-9]*" class="form-control d-inline-block set-input reps-input" placeholder="reps">
                 </div>
             `;
         }

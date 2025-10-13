@@ -8,6 +8,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const themeToggleBtn = document.getElementById('theme-toggle-btn');
     const moveUpBtn = document.getElementById('move-up-btn');
     const moveDownBtn = document.getElementById('move-down-btn');
+    const restTimerDurationInput = document.getElementById('rest-timer-duration');
+    const soundEffectToggle = document.getElementById('sound-effect-toggle');
+    const saveSettingsBtn = document.getElementById('save-settings-btn');
 
     let selectedRoutineItem = null;
     let selectedAvailableItem = null;
@@ -208,6 +211,48 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
+    // --- Settings Logic ---
+    async function loadSettings() {
+        const { data, error } = await supabaseClient
+            .from('settings')
+            .select('*')
+            .eq('id', 1)
+            .single();
+
+        if (error) {
+            console.error('Error loading settings:', error);
+            return;
+        }
+
+        if (data) {
+            restTimerDurationInput.value = data.rest_timer_duration;
+            soundEffectToggle.checked = data.play_sound_on_timer_end;
+        }
+    }
+
+    saveSettingsBtn.addEventListener('click', async () => {
+        const duration = parseInt(restTimerDurationInput.value);
+        const playSound = soundEffectToggle.checked;
+
+        if (isNaN(duration) || duration <= 0) {
+            alert('Please enter a valid duration.');
+            return;
+        }
+
+        const { error } = await supabaseClient
+            .from('settings')
+            .update({ rest_timer_duration: duration, play_sound_on_timer_end: playSound })
+            .eq('id', 1);
+
+        if (error) {
+            alert('Error saving settings.');
+            console.error(error);
+        } else {
+            alert('Settings saved successfully!');
+        }
+    });
+
     // Initial Load
     loadAllExercises();
+    loadSettings();
 });

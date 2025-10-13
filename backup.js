@@ -35,11 +35,13 @@ document.addEventListener('DOMContentLoaded', () => {
             const { data: exercises } = await supabaseClient.from('exercises').select('*');
             const { data: workout_sessions } = await supabaseClient.from('workout_sessions').select('*');
             const { data: sets } = await supabaseClient.from('sets').select('*');
+            const { data: settings } = await supabaseClient.from('settings').select('*');
 
             const backupData = {
                 exercises,
                 workout_sessions,
                 sets,
+                settings,
             };
 
             const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' });
@@ -103,8 +105,15 @@ document.addEventListener('DOMContentLoaded', () => {
             await supabaseClient.from('sets').delete().neq('id', 0);
             await supabaseClient.from('workout_sessions').delete().neq('id', 0);
             await supabaseClient.from('exercises').delete().neq('id', 0);
+            await supabaseClient.from('settings').delete().neq('id', 0);
 
-            // 2. Restore exercises and create an ID map { oldId: newId }
+            // 2. Restore settings
+            if (backupData.settings && backupData.settings.length > 0) {
+                const { error: settingsError } = await supabaseClient.from('settings').insert(backupData.settings);
+                if (settingsError) throw settingsError;
+            }
+
+            // 3. Restore exercises and create an ID map { oldId: newId }
             const oldExerciseIdMap = {};
             const sanitizedExercises = backupData.exercises.map(({ id, created_at, ...rest }, index) => ({
                 ...rest,

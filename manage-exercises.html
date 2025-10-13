@@ -85,6 +85,24 @@
                 </div>
             </div>
         </div>
+
+        <!-- Section 3: Configuration -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h2>Configuration</h2>
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label for="rest-timer-duration" class="form-label">Rest Timer Duration (seconds)</label>
+                    <input type="number" class="form-control" id="rest-timer-duration" value="90">
+                </div>
+                <div class="form-check form-switch mb-3">
+                    <input class="form-check-input" type="checkbox" id="sound-effect-toggle" checked>
+                    <label class="form-check-label" for="sound-effect-toggle">Play Sound on Timer End</label>
+                </div>
+                <button class="btn btn-primary" id="save-settings-btn">Save Settings</button>
+            </div>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
