@@ -6,71 +6,71 @@
       "muscle_group": "Chest",
       "is_in_routine": true,
       "ordering": 0,
-      "created_at": "2025-10-08T06:44:48.701149+00:00"
+      "created_at": "2025-10-13T11:05:15.703681+00:00"
     },
     {
-      "id": 15,
+      "id": 13,
       "name": "Flat Dumbbell Press",
       "muscle_group": "Chest",
       "is_in_routine": true,
       "ordering": 1,
-      "created_at": "2025-10-08T06:44:48.701149+00:00"
+      "created_at": "2025-10-13T11:05:15.703681+00:00"
     },
     {
-      "id": 19,
+      "id": 14,
       "name": "Dumbbell Chest-Supported Row",
       "muscle_group": "Back",
       "is_in_routine": true,
       "ordering": 2,
-      "created_at": "2025-10-08T06:44:48.701149+00:00"
+      "created_at": "2025-10-13T11:05:15.703681+00:00"
     },
     {
-      "id": 16,
+      "id": 15,
       "name": "Single Arm Dumbbell Row",
       "muscle_group": "Back",
       "is_in_routine": true,
       "ordering": 3,
-      "created_at": "2025-10-08T06:44:48.701149+00:00"
+      "created_at": "2025-10-13T11:05:15.703681+00:00"
     },
     {
-      "id": 20,
+      "id": 16,
       "name": "Dumbbell Lateral Raise",
       "muscle_group": "Shoulders",
       "is_in_routine": true,
       "ordering": 5,
-      "created_at": "2025-10-08T06:44:48.701149+00:00"
+      "created_at": "2025-10-13T11:05:15.703681+00:00"
     },
     {
-      "id": 22,
+      "id": 17,
       "name": "Wall Leaning Dumbbell Lateral Raise",
       "muscle_group": "Shoulders",
       "is_in_routine": true,
       "ordering": 6,
-      "created_at": "2025-10-08T06:44:48.701149+00:00"
+      "created_at": "2025-10-13T11:05:15.703681+00:00"
     },
     {
-      "id": 14,
+      "id": 18,
       "name": "Seated Dumbbell Press",
       "muscle_group": "Shoulders",
       "is_in_routine": true,
       "ordering": 4,
-      "created_at": "2025-10-08T06:44:48.701149+00:00"
+      "created_at": "2025-10-13T11:05:15.703681+00:00"
     },
     {
-      "id": 13,
+      "id": 19,
       "name": "Seated Incline Dumbbell Curls",
       "muscle_group": "Arms",
       "is_in_routine": true,
       "ordering": 7,
-      "created_at": "2025-10-08T06:44:48.701149+00:00"
+      "created_at": "2025-10-13T11:05:15.703681+00:00"
     },
     {
-      "id": 18,
+      "id": 20,
       "name": "Preacher Dumbbell Curls",
       "muscle_group": "Arms",
       "is_in_routine": true,
       "ordering": 8,
-      "created_at": "2025-10-08T06:44:48.701149+00:00"
+      "created_at": "2025-10-13T11:05:15.703681+00:00"
     },
     {
       "id": 21,
@@ -78,27 +78,29 @@
       "muscle_group": "Arms",
       "is_in_routine": true,
       "ordering": 9,
-      "created_at": "2025-10-08T06:44:48.701149+00:00"
+      "created_at": "2025-10-13T11:05:15.703681+00:00"
     },
     {
-      "id": 17,
+      "id": 22,
       "name": "Dumbbell Romanian Deadlifts",
       "muscle_group": "Legs",
       "is_in_routine": true,
       "ordering": 10,
-      "created_at": "2025-10-08T06:44:48.701149+00:00"
+      "created_at": "2025-10-13T11:05:15.703681+00:00"
     }
   ],
   "workout_sessions": [
     {
       "id": 1,
       "date": "2025-10-08",
-      "created_at": "2025-10-08T06:44:48.821107+00:00"
+      "duration": null,
+      "created_at": "2025-10-13T11:05:15.812403+00:00"
     },
     {
       "id": 2,
       "date": "2025-10-11",
-      "created_at": "2025-10-11T08:54:16.775416+00:00"
+      "duration": null,
+      "created_at": "2025-10-13T11:05:15.812403+00:00"
     }
   ],
   "sets": [
@@ -110,7 +112,7 @@
       "weight": 8,
       "reps": 12,
       "volume": 96,
-      "created_at": "2025-10-08T06:44:48.926132+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 2,
@@ -120,7 +122,7 @@
       "weight": 9,
       "reps": 12,
       "volume": 108,
-      "created_at": "2025-10-08T06:44:48.926132+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 3,
@@ -130,247 +132,247 @@
       "weight": 10,
       "reps": 12,
       "volume": 120,
-      "created_at": "2025-10-08T06:44:48.926132+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 4,
       "workout_session_id": 1,
-      "exercise_id": 15,
+      "exercise_id": 13,
       "set_number": 1,
       "weight": 10,
       "reps": 12,
       "volume": 120,
-      "created_at": "2025-10-08T06:44:48.926132+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 5,
       "workout_session_id": 1,
-      "exercise_id": 15,
+      "exercise_id": 13,
       "set_number": 2,
       "weight": 11,
       "reps": 14,
       "volume": 154,
-      "created_at": "2025-10-08T06:44:48.926132+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 6,
+      "workout_session_id": 1,
+      "exercise_id": 13,
+      "set_number": 3,
+      "weight": 12,
+      "reps": 12,
+      "volume": 144,
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
+    },
+    {
+      "id": 7,
+      "workout_session_id": 1,
+      "exercise_id": 14,
+      "set_number": 1,
+      "weight": 8,
+      "reps": 12,
+      "volume": 96,
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
+    },
+    {
+      "id": 8,
+      "workout_session_id": 1,
+      "exercise_id": 14,
+      "set_number": 2,
+      "weight": 9,
+      "reps": 12,
+      "volume": 108,
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
+    },
+    {
+      "id": 9,
+      "workout_session_id": 1,
+      "exercise_id": 14,
+      "set_number": 3,
+      "weight": 10,
+      "reps": 12,
+      "volume": 120,
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
+    },
+    {
+      "id": 10,
+      "workout_session_id": 1,
+      "exercise_id": 15,
+      "set_number": 1,
+      "weight": 10,
+      "reps": 12,
+      "volume": 120,
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
+    },
+    {
+      "id": 11,
+      "workout_session_id": 1,
+      "exercise_id": 15,
+      "set_number": 2,
+      "weight": 11,
+      "reps": 12,
+      "volume": 132,
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
+    },
+    {
+      "id": 12,
       "workout_session_id": 1,
       "exercise_id": 15,
       "set_number": 3,
       "weight": 12,
       "reps": 12,
       "volume": 144,
-      "created_at": "2025-10-08T06:44:48.926132+00:00"
-    },
-    {
-      "id": 7,
-      "workout_session_id": 1,
-      "exercise_id": 19,
-      "set_number": 1,
-      "weight": 8,
-      "reps": 12,
-      "volume": 96,
-      "created_at": "2025-10-08T06:44:48.926132+00:00"
-    },
-    {
-      "id": 8,
-      "workout_session_id": 1,
-      "exercise_id": 19,
-      "set_number": 2,
-      "weight": 9,
-      "reps": 12,
-      "volume": 108,
-      "created_at": "2025-10-08T06:44:48.926132+00:00"
-    },
-    {
-      "id": 9,
-      "workout_session_id": 1,
-      "exercise_id": 19,
-      "set_number": 3,
-      "weight": 10,
-      "reps": 12,
-      "volume": 120,
-      "created_at": "2025-10-08T06:44:48.926132+00:00"
-    },
-    {
-      "id": 10,
-      "workout_session_id": 1,
-      "exercise_id": 16,
-      "set_number": 1,
-      "weight": 10,
-      "reps": 12,
-      "volume": 120,
-      "created_at": "2025-10-08T06:44:48.926132+00:00"
-    },
-    {
-      "id": 11,
-      "workout_session_id": 1,
-      "exercise_id": 16,
-      "set_number": 2,
-      "weight": 11,
-      "reps": 12,
-      "volume": 132,
-      "created_at": "2025-10-08T06:44:48.926132+00:00"
-    },
-    {
-      "id": 12,
-      "workout_session_id": 1,
-      "exercise_id": 16,
-      "set_number": 3,
-      "weight": 12,
-      "reps": 12,
-      "volume": 144,
-      "created_at": "2025-10-08T06:44:48.926132+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 13,
       "workout_session_id": 1,
-      "exercise_id": 14,
+      "exercise_id": 18,
       "set_number": 1,
       "weight": 10,
       "reps": 12,
       "volume": 120,
-      "created_at": "2025-10-08T06:44:48.926132+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 14,
       "workout_session_id": 1,
-      "exercise_id": 14,
+      "exercise_id": 18,
       "set_number": 2,
       "weight": 11,
       "reps": 12,
       "volume": 132,
-      "created_at": "2025-10-08T06:44:48.926132+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 15,
       "workout_session_id": 1,
-      "exercise_id": 14,
+      "exercise_id": 18,
       "set_number": 3,
       "weight": 12,
       "reps": 12,
       "volume": 144,
-      "created_at": "2025-10-08T06:44:48.926132+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 16,
       "workout_session_id": 1,
-      "exercise_id": 20,
+      "exercise_id": 16,
       "set_number": 1,
       "weight": 7,
       "reps": 12,
       "volume": 84,
-      "created_at": "2025-10-08T06:44:48.926132+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 17,
       "workout_session_id": 1,
-      "exercise_id": 20,
+      "exercise_id": 16,
       "set_number": 2,
       "weight": 7,
       "reps": 12,
       "volume": 84,
-      "created_at": "2025-10-08T06:44:48.926132+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 18,
       "workout_session_id": 1,
-      "exercise_id": 20,
+      "exercise_id": 16,
       "set_number": 3,
       "weight": 8,
       "reps": 12,
       "volume": 96,
-      "created_at": "2025-10-08T06:44:48.926132+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 19,
       "workout_session_id": 1,
-      "exercise_id": 22,
+      "exercise_id": 17,
       "set_number": 1,
       "weight": 6,
       "reps": 10,
       "volume": 60,
-      "created_at": "2025-10-08T06:44:48.926132+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 20,
       "workout_session_id": 1,
-      "exercise_id": 22,
+      "exercise_id": 17,
       "set_number": 2,
       "weight": 6,
       "reps": 12,
       "volume": 72,
-      "created_at": "2025-10-08T06:44:48.926132+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 21,
       "workout_session_id": 1,
-      "exercise_id": 22,
+      "exercise_id": 17,
       "set_number": 3,
       "weight": 6,
       "reps": 12,
       "volume": 72,
-      "created_at": "2025-10-08T06:44:48.926132+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 22,
       "workout_session_id": 1,
-      "exercise_id": 13,
+      "exercise_id": 19,
       "set_number": 1,
       "weight": 7,
       "reps": 12,
       "volume": 84,
-      "created_at": "2025-10-08T06:44:48.926132+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 23,
       "workout_session_id": 1,
-      "exercise_id": 13,
+      "exercise_id": 19,
       "set_number": 2,
       "weight": 7,
       "reps": 12,
       "volume": 84,
-      "created_at": "2025-10-08T06:44:48.926132+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 24,
       "workout_session_id": 1,
-      "exercise_id": 13,
+      "exercise_id": 19,
       "set_number": 3,
       "weight": 8,
       "reps": 12,
       "volume": 96,
-      "created_at": "2025-10-08T06:44:48.926132+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 25,
       "workout_session_id": 1,
-      "exercise_id": 18,
+      "exercise_id": 20,
       "set_number": 1,
       "weight": 8,
       "reps": 10,
       "volume": 80,
-      "created_at": "2025-10-08T06:44:48.926132+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 26,
       "workout_session_id": 1,
-      "exercise_id": 18,
+      "exercise_id": 20,
       "set_number": 2,
       "weight": 8,
       "reps": 10,
       "volume": 80,
-      "created_at": "2025-10-08T06:44:48.926132+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 27,
       "workout_session_id": 1,
-      "exercise_id": 18,
+      "exercise_id": 20,
       "set_number": 3,
       "weight": 9,
       "reps": 12,
       "volume": 108,
-      "created_at": "2025-10-08T06:44:48.926132+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 28,
@@ -380,7 +382,7 @@
       "weight": 10,
       "reps": 12,
       "volume": 120,
-      "created_at": "2025-10-08T06:44:48.926132+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 29,
@@ -390,7 +392,7 @@
       "weight": 15,
       "reps": 12,
       "volume": 180,
-      "created_at": "2025-10-08T06:44:48.926132+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 30,
@@ -400,37 +402,37 @@
       "weight": 17,
       "reps": 12,
       "volume": 204,
-      "created_at": "2025-10-08T06:44:48.926132+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 31,
       "workout_session_id": 1,
-      "exercise_id": 17,
+      "exercise_id": 22,
       "set_number": 1,
       "weight": 10,
       "reps": 12,
       "volume": 120,
-      "created_at": "2025-10-08T06:44:48.926132+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 32,
       "workout_session_id": 1,
-      "exercise_id": 17,
+      "exercise_id": 22,
       "set_number": 2,
       "weight": 12,
       "reps": 12,
       "volume": 144,
-      "created_at": "2025-10-08T06:44:48.926132+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 33,
       "workout_session_id": 1,
-      "exercise_id": 17,
+      "exercise_id": 22,
       "set_number": 3,
       "weight": 14,
       "reps": 12,
       "volume": 168,
-      "created_at": "2025-10-08T06:44:48.926132+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 34,
@@ -440,7 +442,7 @@
       "weight": 10,
       "reps": 12,
       "volume": 120,
-      "created_at": "2025-10-11T08:54:16.973757+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 35,
@@ -450,7 +452,7 @@
       "weight": 12,
       "reps": 12,
       "volume": 144,
-      "created_at": "2025-10-11T08:54:16.973757+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 36,
@@ -460,247 +462,247 @@
       "weight": 14,
       "reps": 12,
       "volume": 168,
-      "created_at": "2025-10-11T08:54:16.973757+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 37,
       "workout_session_id": 2,
-      "exercise_id": 15,
+      "exercise_id": 13,
       "set_number": 1,
       "weight": 12,
       "reps": 12,
       "volume": 144,
-      "created_at": "2025-10-11T08:54:16.973757+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 38,
       "workout_session_id": 2,
-      "exercise_id": 15,
+      "exercise_id": 13,
       "set_number": 2,
       "weight": 14,
       "reps": 12,
       "volume": 168,
-      "created_at": "2025-10-11T08:54:16.973757+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 39,
       "workout_session_id": 2,
-      "exercise_id": 15,
+      "exercise_id": 13,
       "set_number": 3,
       "weight": 16,
       "reps": 12,
       "volume": 192,
-      "created_at": "2025-10-11T08:54:16.973757+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 40,
       "workout_session_id": 2,
-      "exercise_id": 19,
+      "exercise_id": 14,
       "set_number": 1,
       "weight": 10,
       "reps": 12,
       "volume": 120,
-      "created_at": "2025-10-11T08:54:16.973757+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 41,
       "workout_session_id": 2,
-      "exercise_id": 19,
+      "exercise_id": 14,
       "set_number": 2,
       "weight": 12,
       "reps": 12,
       "volume": 144,
-      "created_at": "2025-10-11T08:54:16.973757+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 42,
       "workout_session_id": 2,
-      "exercise_id": 19,
+      "exercise_id": 14,
       "set_number": 3,
       "weight": 14,
       "reps": 12,
       "volume": 168,
-      "created_at": "2025-10-11T08:54:16.973757+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 43,
       "workout_session_id": 2,
-      "exercise_id": 16,
+      "exercise_id": 15,
       "set_number": 1,
       "weight": 12,
       "reps": 12,
       "volume": 144,
-      "created_at": "2025-10-11T08:54:16.973757+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 44,
       "workout_session_id": 2,
-      "exercise_id": 16,
+      "exercise_id": 15,
       "set_number": 2,
       "weight": 14,
       "reps": 12,
       "volume": 168,
-      "created_at": "2025-10-11T08:54:16.973757+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 45,
       "workout_session_id": 2,
-      "exercise_id": 16,
+      "exercise_id": 15,
       "set_number": 3,
       "weight": 15,
       "reps": 12,
       "volume": 180,
-      "created_at": "2025-10-11T08:54:16.973757+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 46,
       "workout_session_id": 2,
-      "exercise_id": 14,
+      "exercise_id": 18,
       "set_number": 1,
       "weight": 12,
       "reps": 12,
       "volume": 144,
-      "created_at": "2025-10-11T08:54:16.973757+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 47,
       "workout_session_id": 2,
-      "exercise_id": 14,
+      "exercise_id": 18,
       "set_number": 2,
       "weight": 13,
       "reps": 12,
       "volume": 156,
-      "created_at": "2025-10-11T08:54:16.973757+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 48,
       "workout_session_id": 2,
-      "exercise_id": 14,
+      "exercise_id": 18,
       "set_number": 3,
       "weight": 15,
       "reps": 12,
       "volume": 180,
-      "created_at": "2025-10-11T08:54:16.973757+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 49,
       "workout_session_id": 2,
-      "exercise_id": 20,
+      "exercise_id": 16,
       "set_number": 1,
       "weight": 8,
       "reps": 12,
       "volume": 96,
-      "created_at": "2025-10-11T08:54:16.973757+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 50,
       "workout_session_id": 2,
-      "exercise_id": 20,
+      "exercise_id": 16,
       "set_number": 2,
       "weight": 9,
       "reps": 12,
       "volume": 108,
-      "created_at": "2025-10-11T08:54:16.973757+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 51,
       "workout_session_id": 2,
+      "exercise_id": 16,
+      "set_number": 3,
+      "weight": 10,
+      "reps": 12,
+      "volume": 120,
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
+    },
+    {
+      "id": 52,
+      "workout_session_id": 2,
+      "exercise_id": 17,
+      "set_number": 1,
+      "weight": 6,
+      "reps": 12,
+      "volume": 72,
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
+    },
+    {
+      "id": 53,
+      "workout_session_id": 2,
+      "exercise_id": 17,
+      "set_number": 2,
+      "weight": 7,
+      "reps": 10,
+      "volume": 70,
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
+    },
+    {
+      "id": 54,
+      "workout_session_id": 2,
+      "exercise_id": 17,
+      "set_number": 3,
+      "weight": 7,
+      "reps": 10,
+      "volume": 70,
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
+    },
+    {
+      "id": 55,
+      "workout_session_id": 2,
+      "exercise_id": 19,
+      "set_number": 1,
+      "weight": 8,
+      "reps": 12,
+      "volume": 96,
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
+    },
+    {
+      "id": 56,
+      "workout_session_id": 2,
+      "exercise_id": 19,
+      "set_number": 2,
+      "weight": 9,
+      "reps": 12,
+      "volume": 108,
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
+    },
+    {
+      "id": 57,
+      "workout_session_id": 2,
+      "exercise_id": 19,
+      "set_number": 3,
+      "weight": 10,
+      "reps": 11,
+      "volume": 110,
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
+    },
+    {
+      "id": 58,
+      "workout_session_id": 2,
+      "exercise_id": 20,
+      "set_number": 1,
+      "weight": 9,
+      "reps": 12,
+      "volume": 108,
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
+    },
+    {
+      "id": 59,
+      "workout_session_id": 2,
+      "exercise_id": 20,
+      "set_number": 2,
+      "weight": 10,
+      "reps": 12,
+      "volume": 120,
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
+    },
+    {
+      "id": 60,
+      "workout_session_id": 2,
       "exercise_id": 20,
       "set_number": 3,
       "weight": 10,
       "reps": 12,
       "volume": 120,
-      "created_at": "2025-10-11T08:54:16.973757+00:00"
-    },
-    {
-      "id": 52,
-      "workout_session_id": 2,
-      "exercise_id": 22,
-      "set_number": 1,
-      "weight": 6,
-      "reps": 12,
-      "volume": 72,
-      "created_at": "2025-10-11T08:54:16.973757+00:00"
-    },
-    {
-      "id": 53,
-      "workout_session_id": 2,
-      "exercise_id": 22,
-      "set_number": 2,
-      "weight": 7,
-      "reps": 10,
-      "volume": 70,
-      "created_at": "2025-10-11T08:54:16.973757+00:00"
-    },
-    {
-      "id": 54,
-      "workout_session_id": 2,
-      "exercise_id": 22,
-      "set_number": 3,
-      "weight": 7,
-      "reps": 10,
-      "volume": 70,
-      "created_at": "2025-10-11T08:54:16.973757+00:00"
-    },
-    {
-      "id": 55,
-      "workout_session_id": 2,
-      "exercise_id": 13,
-      "set_number": 1,
-      "weight": 8,
-      "reps": 12,
-      "volume": 96,
-      "created_at": "2025-10-11T08:54:16.973757+00:00"
-    },
-    {
-      "id": 56,
-      "workout_session_id": 2,
-      "exercise_id": 13,
-      "set_number": 2,
-      "weight": 9,
-      "reps": 12,
-      "volume": 108,
-      "created_at": "2025-10-11T08:54:16.973757+00:00"
-    },
-    {
-      "id": 57,
-      "workout_session_id": 2,
-      "exercise_id": 13,
-      "set_number": 3,
-      "weight": 10,
-      "reps": 11,
-      "volume": 110,
-      "created_at": "2025-10-11T08:54:16.973757+00:00"
-    },
-    {
-      "id": 58,
-      "workout_session_id": 2,
-      "exercise_id": 18,
-      "set_number": 1,
-      "weight": 9,
-      "reps": 12,
-      "volume": 108,
-      "created_at": "2025-10-11T08:54:16.973757+00:00"
-    },
-    {
-      "id": 59,
-      "workout_session_id": 2,
-      "exercise_id": 18,
-      "set_number": 2,
-      "weight": 10,
-      "reps": 12,
-      "volume": 120,
-      "created_at": "2025-10-11T08:54:16.973757+00:00"
-    },
-    {
-      "id": 60,
-      "workout_session_id": 2,
-      "exercise_id": 18,
-      "set_number": 3,
-      "weight": 10,
-      "reps": 12,
-      "volume": 120,
-      "created_at": "2025-10-11T08:54:16.973757+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 61,
@@ -710,7 +712,7 @@
       "weight": 17,
       "reps": 12,
       "volume": 204,
-      "created_at": "2025-10-11T08:54:16.973757+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 62,
@@ -720,7 +722,7 @@
       "weight": 19,
       "reps": 12,
       "volume": 228,
-      "created_at": "2025-10-11T08:54:16.973757+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 63,
@@ -730,37 +732,44 @@
       "weight": 21,
       "reps": 12,
       "volume": 252,
-      "created_at": "2025-10-11T08:54:16.973757+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 64,
       "workout_session_id": 2,
-      "exercise_id": 17,
+      "exercise_id": 22,
       "set_number": 1,
       "weight": 14,
       "reps": 12,
       "volume": 168,
-      "created_at": "2025-10-11T08:54:16.973757+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 65,
       "workout_session_id": 2,
-      "exercise_id": 17,
+      "exercise_id": 22,
       "set_number": 2,
       "weight": 16,
       "reps": 12,
       "volume": 192,
-      "created_at": "2025-10-11T08:54:16.973757+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
     },
     {
       "id": 66,
       "workout_session_id": 2,
-      "exercise_id": 17,
+      "exercise_id": 22,
       "set_number": 3,
       "weight": 18,
       "reps": 12,
       "volume": 216,
-      "created_at": "2025-10-11T08:54:16.973757+00:00"
+      "created_at": "2025-10-13T11:05:15.918934+00:00"
+    }
+  ],
+  "settings": [
+    {
+      "id": 1,
+      "rest_timer_duration": 90,
+      "play_sound_on_timer_end": true
     }
   ]
 }
