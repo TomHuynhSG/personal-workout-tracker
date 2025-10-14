@@ -25,6 +25,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const homeLink = document.getElementById('home-link');
     const themeToggleBtn = document.getElementById('theme-toggle-btn');
     const timerContainer = document.getElementById('timer-container');
+    const timerSound = new Audio('sound/timer-up.mp3'); // Pre-load the sound
 
     let timerInterval = null;
     let timerSeconds = 0;
@@ -89,7 +90,37 @@ document.addEventListener('DOMContentLoaded', async () => {
             const { data: sessionData } = await supabaseClient.from('workout_sessions').select('date, duration').eq('id', sessionId).single();
             sessionDate.textContent = `Workout Session - ${formatDate(sessionData.date)}`;
             if (sessionData.duration) {
-                timerContainer.innerHTML = `<span class="badge bg-info fs-5">Duration: ${formatTime(sessionData.duration)}</span>`;
+                timerContainer.innerHTML = `
+                    <div class="d-flex flex-column flex-md-row align-items-center">
+                        <span class="badge bg-info fs-5 mb-1 mb-md-0 me-md-2">Duration: ${formatTime(sessionData.duration)}</span>
+                        <button type="button" id="continue-workout-btn" class="btn btn-sm btn-primary">Continue Workout</button>
+                    </div>
+                `;
+                document.getElementById('continue-workout-btn').addEventListener('click', () => {
+                    timerSeconds = sessionData.duration;
+                    timerContainer.innerHTML = `
+                        <div class="d-flex flex-column flex-md-row align-items-center">
+                            <span id="timer-display" class="badge bg-success fs-5 mb-1 mb-md-0 me-md-2">${formatTime(timerSeconds)}</span>
+                            <button type="button" id="timer-toggle-btn" class="btn btn-sm btn-warning">Pause</button>
+                        </div>
+                    `;
+                    startTimer();
+
+                    document.getElementById('timer-toggle-btn').addEventListener('click', (e) => {
+                        const btn = e.target;
+                        if (btn.textContent === 'Pause') {
+                            stopTimer();
+                            btn.textContent = 'Resume';
+                            btn.classList.remove('btn-warning');
+                            btn.classList.add('btn-success');
+                        } else {
+                            startTimer();
+                            btn.textContent = 'Pause';
+                            btn.classList.remove('btn-success');
+                            btn.classList.add('btn-warning');
+                        }
+                    });
+                });
             }
         } else {
             const today = new Date();
@@ -276,7 +307,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const sessionId = info.event.extendedProps.sessionId;
                 startWorkoutSession(sessionId);
             },
-            eventColor: '#198754'
+            eventColor: '#198754',
+            aspectRatio: 1.8
         });
 
         calendar.render();
@@ -366,8 +398,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 clearInterval(intervalId);
                 timerBadge.remove();
                 if (settings.play_sound_on_timer_end) {
-                    const audio = new Audio('sound/timer-up.mp3');
-                    audio.play();
+                    timerSound.currentTime = 0; // Rewind to the start
+                    timerSound.play().catch(error => console.error("Audio playback failed:", error));
                 }
             }
         }, 1000);
@@ -451,10 +483,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     confirmSaveBtn.addEventListener('click', async () => {
         saveConfirmationModal.hide();
         let sessionId = workoutForm.dataset.sessionId;
+        stopTimer(); // Stop timer for both new and continued sessions
 
         // If it's a new session, create it first
         if (!sessionId) {
-            stopTimer();
             const localDate = new Date();
             const year = localDate.getFullYear();
             const month = String(localDate.getMonth() + 1).padStart(2, '0');
@@ -474,7 +506,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
             sessionId = sessionData.id;
         } else {
-            // If we are editing an existing session, first delete all its old sets
+            // If we are editing an existing session, update its duration and delete its old sets
+            const { error: updateError } = await supabaseClient
+                .from('workout_sessions')
+                .update({ duration: timerSeconds })
+                .eq('id', sessionId);
+
+            if (updateError) {
+                console.error('Error updating session duration:', updateError);
+                alert('Failed to update session duration.');
+                // We can still proceed to save the sets
+            }
+
             await supabaseClient.from('sets').delete().eq('workout_session_id', sessionId);
         }
 
@@ -644,11 +687,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     let overallVolumeChart = null;
     let exerciseProgressChart = null;
     let muscleGroupChart = null;
+    let durationChart = null;
 
     async function loadDashboardCharts() {
         const { data, error } = await supabaseClient
             .from('workout_sessions')
-            .select('date, sets(*, exercises(id, name, muscle_group))')
+            .select('date, duration, sets(*, exercises(id, name, muscle_group))')
             .order('date', { ascending: true });
 
         if (error) {
@@ -704,6 +748,22 @@ document.addEventListener('DOMContentLoaded', async () => {
                     label: 'Total Volume (kg)',
                     data: sessionVolumes.map(s => s.volume),
                     borderColor: 'rgba(75, 192, 192, 1)',
+                    tension: 0.1
+                }]
+            }
+        });
+
+        // Process data for duration chart
+        const durationCtx = document.getElementById('durationChart').getContext('2d');
+        if (durationChart) durationChart.destroy();
+        durationChart = new Chart(durationCtx, {
+            type: 'line',
+            data: {
+                labels: data.map(s => formatDate(s.date)),
+                datasets: [{
+                    label: 'Workout Duration (minutes)',
+                    data: data.map(s => s.duration / 60), // Convert seconds to minutes
+                    borderColor: 'rgba(255, 159, 64, 1)',
                     tension: 0.1
                 }]
             }
