@@ -302,6 +302,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const calendar = new FullCalendar.Calendar(calendarEl, {
             initialView: 'dayGridMonth',
+            firstDay: 1, // Start week on Monday
             events: events,
             eventClick: function(info) {
                 const sessionId = info.event.extendedProps.sessionId;
