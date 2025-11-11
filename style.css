@@ -18,6 +18,10 @@ body {
     margin-right: 5px;
 }
 
+.set-input::placeholder {
+    color: #adb5bd;
+}
+
 #overallVolumeChart, #exerciseProgressChart {
     max-height: 250px;
 }

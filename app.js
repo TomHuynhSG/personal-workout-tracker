@@ -87,6 +87,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         timerContainer.innerHTML = ''; // Clear previous timer/duration
 
         if (sessionId) {
+            document.getElementById('delete-session-btn').classList.remove('d-none');
             const { data: sessionData } = await supabaseClient.from('workout_sessions').select('date, duration').eq('id', sessionId).single();
             sessionDate.textContent = `Workout Session - ${formatDate(sessionData.date)}`;
             if (sessionData.duration) {
@@ -123,6 +124,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 });
             }
         } else {
+            document.getElementById('delete-session-btn').classList.add('d-none');
             const today = new Date();
             sessionDate.textContent = `Workout Session - ${formatDate(today)}`;
             timerContainer.innerHTML = `
@@ -174,10 +176,17 @@ document.addEventListener('DOMContentLoaded', async () => {
             let setsForPlaceholders = [];
 
             // 1. Find the most recent session DATE for this specific exercise
-            const { data: lastSessionWithExercise, error: lastSessionError } = await supabaseClient
+            // When editing an existing session, exclude the current session to find the actual previous workout
+            let lastSessionQuery = supabaseClient
                 .from('workout_sessions')
                 .select('id, date, sets!inner(exercise_id)')
-                .eq('sets.exercise_id', exercise.id)
+                .eq('sets.exercise_id', exercise.id);
+            
+            if (sessionId) {
+                lastSessionQuery = lastSessionQuery.neq('id', sessionId);
+            }
+            
+            const { data: lastSessionWithExercise, error: lastSessionError } = await lastSessionQuery
                 .order('date', { ascending: false })
                 .limit(1)
                 .single();
@@ -202,16 +211,40 @@ document.addEventListener('DOMContentLoaded', async () => {
             let setsHtml = '';
             if (sessionId) { // Editing an existing session
                 const setsToLoad = setsForEditing.filter(s => s.exercise_id === exercise.id);
-                if (setsToLoad.length > 0) {
-                    setsToLoad.forEach(s => {
+                
+                // First, add the sets that were actually performed in this session
+                setsToLoad.forEach(s => {
+                    setsHtml += `
+                        <div class="set mt-2 position-relative">
+                            <input type="number" inputmode="decimal" pattern="[0-9]*" class="form-control d-inline-block set-input weight-input" placeholder="${s.weight || 'kg'}" value="${s.weight || ''}">
+                            <input type="number" inputmode="decimal" pattern="[0-9]*" class="form-control d-inline-block set-input reps-input" placeholder="${s.reps || 'reps'}" value="${s.reps || ''}">
+                        </div>
+                    `;
+                });
+
+                // Then, if fewer sets were done than the last time, add the remainder as placeholders
+                if (setsForPlaceholders.length > setsToLoad.length) {
+                    const remainingSets = setsForPlaceholders.slice(setsToLoad.length);
+                    remainingSets.forEach(s => {
                         setsHtml += `
                             <div class="set mt-2 position-relative">
-                                <input type="number" inputmode="decimal" pattern="[0-9]*" class="form-control d-inline-block set-input weight-input" placeholder="${s.weight || 'kg'}" value="${s.weight || ''}">
-                                <input type="number" inputmode="decimal" pattern="[0-9]*" class="form-control d-inline-block set-input reps-input" placeholder="${s.reps || 'reps'}" value="${s.reps || ''}">
+                                <input type="number" inputmode="decimal" pattern="[0-9]*" class="form-control d-inline-block set-input weight-input" placeholder="${s.weight || 'kg'}">
+                                <input type="number" inputmode="decimal" pattern="[0-9]*" class="form-control d-inline-block set-input reps-input" placeholder="${s.reps || 'reps'}">
+                            </div>
+                        `;
+                    });
+                } else if (setsToLoad.length === 0 && setsForPlaceholders.length > 0) {
+                    // If the exercise was SKIPPED in this session, use placeholders from the last performance
+                    setsForPlaceholders.forEach(s => {
+                        setsHtml += `
+                            <div class="set mt-2 position-relative">
+                                <input type="number" inputmode="decimal" pattern="[0-9]*" class="form-control d-inline-block set-input weight-input" placeholder="${s.weight || 'kg'}">
+                                <input type="number" inputmode="decimal" pattern="[0-9]*" class="form-control d-inline-block set-input reps-input" placeholder="${s.reps || 'reps'}">
                             </div>
                         `;
                     });
                 }
+
             } else { // Starting a new session, use placeholders from the last performance
                 if (setsForPlaceholders.length > 0) {
                     setsForPlaceholders.forEach(s => {
@@ -475,6 +508,45 @@ document.addEventListener('DOMContentLoaded', async () => {
     const existingExerciseSelect = document.getElementById('existing-exercise-select');
     const addSelectedExerciseBtn = document.getElementById('add-selected-exercise-btn');
     const createNewExerciseBtn = document.getElementById('create-new-exercise-btn');
+    const deleteSessionBtn = document.getElementById('delete-session-btn');
+    const deleteConfirmationModal = new bootstrap.Modal(document.getElementById('deleteConfirmationModal'));
+    const confirmDeleteBtn = document.getElementById('confirm-delete-btn');
+
+    deleteSessionBtn.addEventListener('click', () => {
+        deleteConfirmationModal.show();
+    });
+
+    confirmDeleteBtn.addEventListener('click', async () => {
+        const sessionId = workoutForm.dataset.sessionId;
+        if (!sessionId) return;
+
+        // First, delete all sets associated with the session
+        const { error: setsError } = await supabaseClient
+            .from('sets')
+            .delete()
+            .eq('workout_session_id', sessionId);
+
+        if (setsError) {
+            console.error('Error deleting sets:', setsError);
+            alert('Failed to delete workout sets.');
+            return;
+        }
+
+        // Then, delete the session itself
+        const { error: sessionError } = await supabaseClient
+            .from('workout_sessions')
+            .delete()
+            .eq('id', sessionId);
+
+        if (sessionError) {
+            console.error('Error deleting session:', sessionError);
+            alert('Failed to delete workout session.');
+            return;
+        }
+
+        alert('Workout session deleted successfully!');
+        window.location.href = 'index.html';
+    });
 
     workoutForm.addEventListener('submit', (e) => {
         e.preventDefault();
@@ -623,13 +695,22 @@ document.addEventListener('DOMContentLoaded', async () => {
         row.dataset.exerciseName = exercise.name;
 
         // --- Fetch Previous Volume Logic (mirrors populateWorkoutTable) ---
+        // When adding an exercise during editing, exclude the current session to find the actual previous workout
+        const sessionId = workoutForm.dataset.sessionId;
         let previousVolume = 0;
         let previousDate = 'N/A';
         let setsInLastSession = [];
-        const { data: lastSessionWithExercise } = await supabaseClient
+        
+        let lastSessionQuery = supabaseClient
             .from('workout_sessions')
             .select('id, date, sets!inner(exercise_id)')
-            .eq('sets.exercise_id', exercise.id)
+            .eq('sets.exercise_id', exercise.id);
+        
+        if (sessionId) {
+            lastSessionQuery = lastSessionQuery.neq('id', sessionId);
+        }
+        
+        const { data: lastSessionWithExercise } = await lastSessionQuery
             .order('date', { ascending: false })
             .limit(1)
             .single();
