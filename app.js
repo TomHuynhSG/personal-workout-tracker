@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const formatDate = (dateSource) => {
         // If dateSource is a string (like from Supabase 'YYYY-MM-DD'), replace hyphens to parse it as local time, not UTC.
         const date = typeof dateSource === 'string' ? new Date(dateSource.replace(/-/g, '/')) : new Date(dateSource);
-        
+
         const day = String(date.getDate()).padStart(2, '0');
         const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
         const year = date.getFullYear();
@@ -26,6 +26,23 @@ document.addEventListener('DOMContentLoaded', async () => {
     const themeToggleBtn = document.getElementById('theme-toggle-btn');
     const timerContainer = document.getElementById('timer-container');
     const timerSound = new Audio('sound/timer-up.mp3'); // Pre-load the sound
+
+    const getExerciseIcon = (exerciseName) => {
+        const iconMap = {
+            'Incline Dumbbell Press': 'icons/exercises/incline-dumbbell-press.png',
+            'Flat Dumbbell Press': 'icons/exercises/flat-dumbbell-press.png',
+            'Dumbbell Chest-Supported Row': 'icons/exercises/dumbbell-chest-supported-row.png',
+            'Single Arm Dumbbell Row': 'icons/exercises/single-arm-dumbbell-row.png',
+            'Seated Dumbbell Press': 'icons/exercises/seated-dumbbell-press.png',
+            'Dumbbell Lateral Raise': 'icons/exercises/dumbbell-lateral-raise.png',
+            'Wall Leaning Dumbbell Lateral Raise': 'icons/exercises/wall-leaning-dumbbell-lateral-raise.png',
+            'Seated Incline Dumbbell Curls': 'icons/exercises/seated-incline-dumbbell-curl.png',
+            'Preacher Dumbbell Curls': 'icons/exercises/preacher-dumbbell-curl.png',
+            'Standing Overhead Dumbbell Extension': 'icons/exercises/standing-overhead-dumbbell-extension.png',
+            'Dumbbell Romanian Deadlifts': 'icons/exercises/dumbbell-romanian-deadlift.png'
+        };
+        return iconMap[exerciseName] || null;
+    };
 
     let timerInterval = null;
     let timerSeconds = 0;
@@ -151,7 +168,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 }
             });
         }
-        
+
         await populateWorkoutTable(sessionId);
     }
 
@@ -181,11 +198,11 @@ document.addEventListener('DOMContentLoaded', async () => {
                 .from('workout_sessions')
                 .select('id, date, sets!inner(exercise_id)')
                 .eq('sets.exercise_id', exercise.id);
-            
+
             if (sessionId) {
                 lastSessionQuery = lastSessionQuery.neq('id', sessionId);
             }
-            
+
             const { data: lastSessionWithExercise, error: lastSessionError } = await lastSessionQuery
                 .order('date', { ascending: false })
                 .limit(1)
@@ -211,7 +228,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             let setsHtml = '';
             if (sessionId) { // Editing an existing session
                 const setsToLoad = setsForEditing.filter(s => s.exercise_id === exercise.id);
-                
+
                 // First, add the sets that were actually performed in this session
                 setsToLoad.forEach(s => {
                     setsHtml += `
@@ -268,8 +285,19 @@ document.addEventListener('DOMContentLoaded', async () => {
                 `;
             }
 
+            const iconPath = getExerciseIcon(exercise.name);
+            const iconHtml = iconPath ? `<img src="${iconPath}" alt="${exercise.name}" class="me-2" style="width: 64px; height: 64px; object-fit: contain;">` : '';
+
             row.innerHTML = `
-                <td data-label="Exercise">${exercise.name} <span class="badge bg-secondary">${exercise.muscle_group}</span></td>
+                <td data-label="Exercise">
+                    <div class="d-flex align-items-center">
+                        ${iconHtml}
+                        <div>
+                            ${exercise.name} <br>
+                            <span class="badge bg-secondary">${exercise.muscle_group}</span>
+                        </div>
+                    </div>
+                </td>
                 <td data-label="Sets (Weight x Reps)" class="sets-container">${setsHtml}</td>
                 <td data-label="Volume (kg)" class="volume"><span class="badge bg-primary volume-badge">0</span></td>
                 <td data-label="Previous Volume" class="previous-volume">${previousVolume > 0 ? `<span class="badge bg-danger volume-badge">${previousVolume.toFixed(1)}</span> - ${previousDate}` : 'N/A'}</td>
@@ -278,6 +306,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <button type="button" class="btn btn-sm btn-info add-set-btn">Add Set</button>
                     <button type="button" class="btn btn-sm btn-danger delete-set-btn mt-1">Delete Set</button>
                     <button type="button" class="btn btn-sm btn-warning delete-exercise-btn mt-1">Delete Exercise</button>
+                    <button type="button" class="btn btn-sm btn-secondary history-btn mt-1">History</button>
                 </td>
             `;
             workoutTableBody.appendChild(row);
@@ -337,7 +366,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             initialView: 'dayGridMonth',
             firstDay: 1, // Start week on Monday
             events: events,
-            eventClick: function(info) {
+            eventClick: function (info) {
                 const sessionId = info.event.extendedProps.sessionId;
                 startWorkoutSession(sessionId);
             },
@@ -373,8 +402,76 @@ document.addEventListener('DOMContentLoaded', async () => {
             if (confirm('Are you sure you want to remove this exercise from the session?')) {
                 e.target.closest('tr').remove();
             }
+        } else if (e.target.classList.contains('history-btn')) {
+            const row = e.target.closest('tr');
+            const exerciseId = row.dataset.exerciseId;
+            const exerciseName = row.dataset.exerciseName;
+            showExerciseHistory(exerciseId, exerciseName);
         }
     });
+
+    const historyModal = new bootstrap.Modal(document.getElementById('historyModal'));
+    const historyContent = document.getElementById('history-content');
+    const historyExerciseName = document.getElementById('history-exercise-name');
+
+    async function showExerciseHistory(exerciseId, exerciseName) {
+        historyExerciseName.textContent = exerciseName;
+        historyContent.innerHTML = '<div class="text-center"><div class="spinner-border" role="status"></div></div>';
+        historyModal.show();
+
+        const { data: sessions, error } = await supabaseClient
+            .from('workout_sessions')
+            .select(`
+                date,
+                sets!inner (
+                    weight,
+                    reps,
+                    exercise_id
+                )
+            `)
+            .eq('sets.exercise_id', exerciseId)
+            .order('date', { ascending: false });
+
+        if (error) {
+            console.error('Error fetching history:', error);
+            historyContent.innerHTML = '<p class="text-danger">Failed to load history.</p>';
+            return;
+        }
+
+        if (!sessions || sessions.length === 0) {
+            historyContent.innerHTML = '<p>No history found for this exercise.</p>';
+            return;
+        }
+
+        // Filter out sessions that don't have sets for this exercise (Supabase inner join simulation)
+        const relevantSessions = sessions.filter(session =>
+            session.sets.some(set => set.exercise_id == exerciseId)
+        );
+
+        if (relevantSessions.length === 0) {
+            historyContent.innerHTML = '<p>No history found for this exercise.</p>';
+            return;
+        }
+
+        let html = '<div class="list-group">';
+        relevantSessions.forEach(session => {
+            const sets = session.sets.filter(s => s.exercise_id == exerciseId);
+            const dateStr = formatDate(session.date);
+
+            let setsHtml = sets.map(s => `<span class="badge bg-secondary me-1">${s.weight}kg x ${s.reps}</span>`).join('');
+
+            html += `
+                <div class="list-group-item">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h6 class="mb-1">${dateStr}</h6>
+                    </div>
+                    <p class="mb-1">${setsHtml}</p>
+                </div>
+            `;
+        });
+        html += '</div>';
+        historyContent.innerHTML = html;
+    }
 
     workoutTableBody.addEventListener('input', (e) => {
         if (e.target.classList.contains('weight-input') || e.target.classList.contains('reps-input')) {
@@ -415,7 +512,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         timerBadge.style.position = 'absolute';
         timerBadge.style.top = '-10px';
         timerBadge.style.left = '0px';
-        
+
         let timeLeft = settings.rest_timer_duration;
         const minutes = Math.floor(timeLeft / 60);
         const seconds = timeLeft % 60;
@@ -464,7 +561,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     .order('reps', { ascending: false })
                     .limit(1)
                     .single();
-                
+
                 let isPr = !pr || (weight > pr.weight) || (weight === pr.weight && reps > pr.reps);
 
                 let prBadge = setElement.querySelector('.pr-badge');
@@ -632,7 +729,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     async function populateAddExerciseModal() {
         const exercises = await getExercises();
         const currentlyDisplayed = Array.from(workoutTableBody.querySelectorAll('tr')).map(tr => tr.dataset.exerciseName);
-        
+
         existingExerciseSelect.innerHTML = '<option selected disabled>Select an exercise...</option>'; // Reset
         exercises.forEach(ex => {
             if (!currentlyDisplayed.includes(ex.name)) {
@@ -700,16 +797,16 @@ document.addEventListener('DOMContentLoaded', async () => {
         let previousVolume = 0;
         let previousDate = 'N/A';
         let setsInLastSession = [];
-        
+
         let lastSessionQuery = supabaseClient
             .from('workout_sessions')
             .select('id, date, sets!inner(exercise_id)')
             .eq('sets.exercise_id', exercise.id);
-        
+
         if (sessionId) {
             lastSessionQuery = lastSessionQuery.neq('id', sessionId);
         }
-        
+
         const { data: lastSessionWithExercise } = await lastSessionQuery
             .order('date', { ascending: false })
             .limit(1)
@@ -750,8 +847,19 @@ document.addEventListener('DOMContentLoaded', async () => {
             `;
         }
 
+        const iconPath = getExerciseIcon(exercise.name);
+        const iconHtml = iconPath ? `<img src="${iconPath}" alt="${exercise.name}" class="me-2" style="width: 64px; height: 64px; object-fit: contain;">` : '';
+
         row.innerHTML = `
-            <td data-label="Exercise">${exercise.name} <span class="badge bg-secondary">${exercise.muscle_group}</span></td>
+            <td data-label="Exercise">
+                <div class="d-flex align-items-center">
+                    ${iconHtml}
+                    <div>
+                        ${exercise.name} <br>
+                        <span class="badge bg-secondary">${exercise.muscle_group}</span>
+                    </div>
+                </div>
+            </td>
             <td data-label="Sets (Weight x Reps)" class="sets-container">${setsHtml}</td>
             <td data-label="Volume (kg)" class="volume"><span class="badge bg-primary volume-badge">0</span></td>
             <td data-label="Previous Volume" class="previous-volume">${previousVolume > 0 ? `<span class="badge bg-danger volume-badge">${previousVolume.toFixed(1)}</span> - ${previousDate}` : 'N/A'}</td>
@@ -760,6 +868,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <button type="button" class="btn btn-sm btn-info add-set-btn">Add Set</button>
                 <button type="button" class="btn btn-sm btn-danger delete-set-btn mt-1">Delete Set</button>
                 <button type="button" class="btn btn-sm btn-warning delete-exercise-btn mt-1">Delete Exercise</button>
+                <button type="button" class="btn btn-sm btn-secondary history-btn mt-1">History</button>
             </td>
         `;
         workoutTableBody.appendChild(row);
@@ -899,7 +1008,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Create a set of unique, local date strings for easy lookup
         const workoutDates = new Set(sessions.map(s => new Date(s.date.replace(/-/g, '/')).toDateString()));
-        
+
         let streak = 0;
         const today = new Date();
         let currentDate = new Date();
@@ -985,7 +1094,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 .order('reps', { ascending: false })
                 .limit(1)
                 .single();
-            
+
             if (bestSet) {
                 allPrs.push({
                     exerciseName: exercise.name,
@@ -1002,11 +1111,20 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         allPrs.forEach(pr => {
+            const iconPath = getExerciseIcon(pr.exerciseName);
+            const iconHtml = iconPath ? `<img src="${iconPath}" alt="${pr.exerciseName}" class="me-2" style="width: 40px; height: 40px; object-fit: contain;">` : '';
+
             const item = document.createElement('li');
             item.className = 'list-group-item d-flex justify-content-between align-items-center';
             item.innerHTML = `
-                <span>${pr.exerciseName} <span class="badge bg-secondary">${pr.muscleGroup}</span></span>
-                <span class="badge bg-success rounded-pill">${pr.weight} kg x ${pr.reps} reps</span>
+                <div class="d-flex align-items-center">
+                    ${iconHtml}
+                    <div>
+                        <span class="fw-bold">${pr.exerciseName}</span> <br>
+                        <span class="badge bg-secondary">${pr.muscleGroup}</span>
+                    </div>
+                </div>
+                <span class="badge bg-success rounded-pill fs-6">${pr.weight} kg x ${pr.reps} reps</span>
             `;
             prList.appendChild(item);
         });
