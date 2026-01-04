@@ -1,0 +1,17 @@
+name: Prevent Supabase Pause
+
+on:
+  schedule:
+    - cron: '0 8 */2 * *' # Runs every 2 days at 8:00 UTC
+  workflow_dispatch: # Allows manual triggering
+
+jobs:
+  ping-database:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping Supabase Database
+        run: |
+          # This request retrieves one row from the 'exercises' table to simulate activity.
+          curl -X GET '${{ secrets.SUPABASE_URL }}/rest/v1/exercises?select=*&limit=1' \
+          -H 'apikey: ${{ secrets.SUPABASE_KEY }}' \
+          -H 'Authorization: Bearer ${{ secrets.SUPABASE_KEY }}'
