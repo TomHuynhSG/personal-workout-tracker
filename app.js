@@ -1070,8 +1070,11 @@ document.addEventListener('DOMContentLoaded', async () => {
             <span class="badge bg-success text-white fs-5 d-block mb-1">
                 🗓️ ${workoutsThisMonth} Workouts This Month
             </span>
-            <span class="badge bg-primary text-white fs-5 d-block">
+            <span class="badge bg-primary text-white fs-5 d-block mb-1">
                 🎉 ${workoutsThisYear} Workouts This Year
+            </span>
+            <span class="badge bg-secondary text-white fs-5 d-block">
+                🏆 ${workoutDates.size} Workouts in Total
             </span>
         `;
     }
