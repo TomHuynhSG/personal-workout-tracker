@@ -286,7 +286,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
 
             const iconPath = getExerciseIcon(exercise.name);
-            const iconHtml = iconPath ? `<img src="${iconPath}" alt="${exercise.name}" class="me-2" style="width: 64px; height: 64px; object-fit: contain;">` : '';
+            const iconHtml = iconPath ? `<img src="${iconPath}" alt="${exercise.name}" class="me-2" style="width: 64px; height: 64px; object-fit: contain; cursor: pointer;" onclick="showImagePreview('${iconPath}', '${exercise.name}')">` : '';
 
             row.innerHTML = `
                 <td data-label="Exercise">
@@ -472,6 +472,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         html += '</div>';
         historyContent.innerHTML = html;
     }
+
+    // Make showImagePreview globally available
+    window.showImagePreview = (imageSrc, exerciseName) => {
+        const modalTitle = document.getElementById('imagePreviewModalLabel');
+        const previewImage = document.getElementById('previewImage');
+
+        modalTitle.textContent = exerciseName;
+        previewImage.src = imageSrc;
+
+        const imageModal = new bootstrap.Modal(document.getElementById('imagePreviewModal'));
+        imageModal.show();
+    };
 
     workoutTableBody.addEventListener('input', (e) => {
         if (e.target.classList.contains('weight-input') || e.target.classList.contains('reps-input')) {
@@ -848,7 +860,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         const iconPath = getExerciseIcon(exercise.name);
-        const iconHtml = iconPath ? `<img src="${iconPath}" alt="${exercise.name}" class="me-2" style="width: 64px; height: 64px; object-fit: contain;">` : '';
+        const iconHtml = iconPath ? `<img src="${iconPath}" alt="${exercise.name}" class="me-2" style="width: 64px; height: 64px; object-fit: contain; cursor: pointer;" onclick="showImagePreview('${iconPath}', '${exercise.name}')">` : '';
 
         row.innerHTML = `
             <td data-label="Exercise">
